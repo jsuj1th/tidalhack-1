@@ -311,13 +311,25 @@ USER_TEMPLATE = """
             <p>Share your pizza story and get a delicious reward!</p>
         </div>
         
+        <div class="instructions">
+            <h3>🍕 To get your special pizza coupon, share your most unforgettable pizza story!</h3>
+            <p><strong>You could talk about:</strong></p>
+            <ul>
+                <li>🎢 The wildest pizza experience you've ever had</li>
+                <li>🌟 Your ultimate dream pizza mix</li>
+                <li>☀️ A moment when pizza brightened your day</li>
+                <li>📚 Or any memorable pizza tale!</li>
+            </ul>
+            <p><em>The more creative and entertaining your story, the better the pizza reward you'll receive!</em></p>
+        </div>
+        
         <form id="pizzaForm">
             <div class="story-section">
                 <label for="story">📖 Tell us your pizza story:</label>
                 <textarea 
                     id="story" 
                     class="story-textarea" 
-                    placeholder="Share your most memorable pizza experience! Maybe it was a late-night coding session, a celebration with friends, or discovering your favorite topping combination. The more creative and detailed your story, the better your coupon tier!"
+                    placeholder="Share your most unforgettable pizza story here! Think about the wildest pizza experience you've had, your dream pizza combination, or a moment when pizza made your day special. Be creative and entertaining - the better your story, the better your reward!"
                     required
                 ></textarea>
             </div>

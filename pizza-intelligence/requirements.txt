@@ -5,3 +5,7 @@ requests
 google-generativeai
 flask
 smtplib
+streamlit
+plotly
+pandas
+numpy
