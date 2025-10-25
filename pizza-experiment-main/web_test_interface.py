@@ -16,6 +16,483 @@ import json
 
 app = Flask(__name__)
 
+# Admin dashboard template
+ADMIN_TEMPLATE = """
+<!DOCTYPE html>
+<html>
+<head>
+    <title>👑 Pizza Agent Admin Dashboard</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 20px; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .admin-header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .admin-header h1 {
+            color: #2c3e50;
+            margin: 0 0 10px 0;
+            font-size: 2.5em;
+        }
+        
+        .admin-header p {
+            color: #7f8c8d;
+            margin: 0;
+            font-size: 1.1em;
+        }
+        
+        .container { 
+            background: rgba(255, 255, 255, 0.95); 
+            padding: 30px; 
+            border-radius: 15px; 
+            margin: 20px 0; 
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .auth-section {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+            border: 3px solid #fdcb6e;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px 0;
+            text-align: center;
+        }
+        
+        .auth-checkbox {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            font-size: 1.1em;
+        }
+        
+        .auth-checkbox input[type="checkbox"] {
+            margin-right: 15px;
+            transform: scale(1.5);
+            accent-color: #00b894;
+        }
+        
+        .response { 
+            background: linear-gradient(135deg, #a8e6cf 0%, #88d8a3 100%); 
+            padding: 25px; 
+            border-radius: 12px; 
+            margin: 20px 0; 
+            border-left: 5px solid #00b894; 
+        }
+        
+        .error { 
+            background: linear-gradient(135deg, #fab1a0 0%, #e17055 100%); 
+            padding: 20px; 
+            border-radius: 10px; 
+            margin: 15px 0; 
+            border-left: 5px solid #e74c3c; 
+            color: white;
+        }
+        
+        .status { 
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%); 
+            padding: 20px; 
+            border-radius: 10px; 
+            margin: 20px 0; 
+            border-left: 5px solid #2196F3; 
+            color: white;
+        }
+        
+        button { 
+            background: linear-gradient(135deg, #00b894 0%, #00a085 100%); 
+            color: white; 
+            padding: 15px 30px; 
+            border: none; 
+            border-radius: 10px; 
+            cursor: pointer; 
+            margin: 10px 5px; 
+            font-size: 16px; 
+            font-weight: 600; 
+            transition: all 0.3s; 
+            box-shadow: 0 4px 15px rgba(0,184,148,0.3);
+        }
+        
+        button:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 6px 20px rgba(0,184,148,0.4);
+        }
+        
+        button:disabled {
+            background: #bdc3c7 !important;
+            cursor: not-allowed !important;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+        
+        .back-button {
+            background: linear-gradient(135deg, #636e72 0%, #2d3436 100%);
+            box-shadow: 0 4px 15px rgba(99,110,114,0.3);
+        }
+        
+        .back-button:hover {
+            box-shadow: 0 6px 20px rgba(99,110,114,0.4);
+        }
+        
+        .loading { 
+            display: inline-block; 
+            width: 20px; 
+            height: 20px; 
+            border: 3px solid rgba(255,255,255,0.3); 
+            border-top: 3px solid white; 
+            border-radius: 50%; 
+            animation: spin 1s linear infinite; 
+        }
+        
+        @keyframes spin { 
+            0% { transform: rotate(0deg); } 
+            100% { transform: rotate(360deg); } 
+        }
+        
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s;
+            box-shadow: 0 4px 15px rgba(0,184,148,0.3);
+        }
+        
+        .toast.show { opacity: 1; }
+        
+        .toast.error {
+            background: linear-gradient(135deg, #e17055 0%, #d63031 100%);
+            box-shadow: 0 4px 15px rgba(225,112,85,0.3);
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+        
+        .metric-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+            border: 2px solid transparent;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-5px);
+            border-color: #00b894;
+        }
+        
+        .metric-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .metric-label {
+            color: #636e72;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+        
+        .section-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0 10px 0;
+            text-align: center;
+        }
+        
+        .theme-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .theme-card {
+            background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(108,92,231,0.3);
+            transition: transform 0.3s;
+        }
+        
+        .theme-card:hover {
+            transform: translateY(-3px);
+        }
+        
+        .recommendations-list {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+        
+        .recommendations-list h5 {
+            color: #2d3436;
+            margin-top: 0;
+        }
+        
+        .recommendations-list ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .recommendations-list li {
+            background: rgba(255,255,255,0.8);
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #e17055;
+        }
+        
+        .executive-summary {
+            background: linear-gradient(135deg, #a8e6cf 0%, #88d8a3 100%);
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+            white-space: pre-line;
+            line-height: 1.8;
+            font-size: 1.05em;
+        }
+        
+        .footer-info {
+            background: rgba(45,52,54,0.9);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 30px 0;
+            text-align: center;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-header">
+        <h1>👑 Pizza Agent Admin Dashboard</h1>
+        <p>Comprehensive Event Analytics & Insights</p>
+        <a href="/" class="back-button" style="display: inline-block; text-decoration: none; color: white; margin-top: 15px;">
+            ← Back to Main Interface
+        </a>
+    </div>
+    
+    <div class="container">
+        <h2>🔐 Admin Authentication</h2>
+        <div class="auth-section">
+            <h3 style="margin-top: 0; color: #2d3436;">Access Control</h3>
+            <p style="color: #636e72; margin: 15px 0;">This dashboard provides comprehensive insights from all user stories and reviews. Admin access is required to view confidential event data.</p>
+            
+            <div class="auth-checkbox">
+                <input type="checkbox" id="adminConfirm">
+                <label for="adminConfirm"><strong>Yes, I am an authorized event administrator</strong></label>
+            </div>
+            
+            <button onclick="generateAdminSummary()" id="adminSummaryBtn" disabled>
+                📊 Generate Complete Event Analysis
+            </button>
+        </div>
+    </div>
+    
+    <div id="adminSummaryResult"></div>
+
+    <script>
+        // Toast notification function
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => toast.classList.add('show'), 100);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => document.body.removeChild(toast), 300);
+            }, 3000);
+        }
+        
+        // Admin authentication handler
+        document.addEventListener('DOMContentLoaded', function() {
+            const adminCheckbox = document.getElementById('adminConfirm');
+            const adminButton = document.getElementById('adminSummaryBtn');
+            
+            if (adminCheckbox && adminButton) {
+                adminCheckbox.addEventListener('change', function() {
+                    adminButton.disabled = !this.checked;
+                    if (this.checked) {
+                        adminButton.style.background = 'linear-gradient(135deg, #00b894 0%, #00a085 100%)';
+                        adminButton.style.cursor = 'pointer';
+                        adminButton.style.boxShadow = '0 4px 15px rgba(0,184,148,0.3)';
+                    } else {
+                        adminButton.style.background = '#bdc3c7';
+                        adminButton.style.cursor = 'not-allowed';
+                        adminButton.style.boxShadow = 'none';
+                    }
+                });
+            }
+        });
+        
+        // Generate comprehensive admin summary
+        async function generateAdminSummary() {
+            const adminConfirmed = document.getElementById('adminConfirm').checked;
+            
+            if (!adminConfirmed) {
+                showToast('Please confirm admin authorization first', 'error');
+                return;
+            }
+            
+            const button = event.target;
+            const originalText = button.textContent;
+            button.innerHTML = '<span class="loading"></span> Generating Analysis...';
+            button.disabled = true;
+            
+            try {
+                const response = await fetch('/admin_summary', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({admin_confirmed: true})
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    const summary = result.summary;
+                    
+                    document.getElementById('adminSummaryResult').innerHTML = 
+                        `<div class="container">
+                            <div class="section-header">
+                                <h2>📋 Executive Summary</h2>
+                            </div>
+                            <div class="executive-summary">
+                                ${summary.summary}
+                            </div>
+                            
+                            <div class="section-header">
+                                <h2>📊 Key Performance Indicators</h2>
+                            </div>
+                            <div class="summary-grid">
+                                <div class="metric-card">
+                                    <div class="metric-value">${summary.stats.total_coupons_issued}</div>
+                                    <div class="metric-label">Total Coupons Issued</div>
+                                </div>
+                                <div class="metric-card">
+                                    <div class="metric-value">${summary.stats.average_story_rating.toFixed(1)}/10</div>
+                                    <div class="metric-label">Average Story Rating</div>
+                                </div>
+                                <div class="metric-card">
+                                    <div class="metric-value">${summary.stats.unique_users}</div>
+                                    <div class="metric-label">Unique Participants</div>
+                                </div>
+                                <div class="metric-card">
+                                    <div class="metric-value">${(summary.stats.conversion_rate * 100).toFixed(1)}%</div>
+                                    <div class="metric-label">Conversion Rate</div>
+                                </div>
+                                <div class="metric-card">
+                                    <div class="metric-value">${summary.stats.total_requests}</div>
+                                    <div class="metric-label">Total Requests</div>
+                                </div>
+                                <div class="metric-card">
+                                    <div class="metric-value">${Math.round(summary.stats.average_story_length)}</div>
+                                    <div class="metric-label">Avg Story Length</div>
+                                </div>
+                            </div>
+                            
+                            <div class="section-header">
+                                <h2>💡 Strategic Recommendations</h2>
+                            </div>
+                            <div class="recommendations-list">
+                                <h5>Actionable Insights for Future Events:</h5>
+                                <ul>
+                                    ${summary.recommendations.map(rec => '<li>' + rec + '</li>').join('')}
+                                </ul>
+                            </div>
+                            
+                            ${summary.theme_analysis && Object.keys(summary.theme_analysis).length > 0 ? `
+                            <div class="section-header">
+                                <h2>🎭 Participant Engagement Themes</h2>
+                            </div>
+                            <div class="theme-grid">
+                                ${Object.entries(summary.theme_analysis).map(([theme, count]) => 
+                                    '<div class="theme-card">' +
+                                        '<div style="font-size: 1.5em; font-weight: bold;">' + theme.replace('_', ' ').toUpperCase() + '</div>' +
+                                        '<div style="font-size: 1.2em; margin-top: 8px;">' + count + ' mentions</div>' +
+                                    '</div>'
+                                ).join('')}
+                            </div>
+                            ` : ''}
+                            
+                            <div class="footer-info">
+                                <p><strong>📅 Report Generated:</strong> ${new Date().toLocaleString()}</p>
+                                <p><strong>🔒 Confidential:</strong> Admin-only access • Event organizer use only</p>
+                                <p><strong>📊 Data Source:</strong> Pizza Agent Analytics System</p>
+                            </div>
+                        </div>`;
+                    
+                    showToast('Event analysis generated successfully!');
+                } else {
+                    document.getElementById('adminSummaryResult').innerHTML = 
+                        `<div class="container">
+                            <div class="error">
+                                <h3>❌ Access Denied</h3>
+                                <p>${result.message}</p>
+                            </div>
+                        </div>`;
+                    showToast('Access denied', 'error');
+                }
+                
+            } catch (error) {
+                document.getElementById('adminSummaryResult').innerHTML = 
+                    `<div class="container">
+                        <div class="error">
+                            <h3>❌ System Error</h3>
+                            <p>Failed to generate analysis: ${error.message}</p>
+                        </div>
+                    </div>`;
+                showToast('Failed to generate analysis', 'error');
+            } finally {
+                button.textContent = originalText;
+                button.disabled = !document.getElementById('adminConfirm').checked;
+            }
+        }
+    </script>
+</body>
+</html>
+"""
+
 # HTML template for the web interface
 HTML_TEMPLATE = """
 <!DOCTYPE html>
@@ -184,6 +661,68 @@ HTML_TEMPLATE = """
             transition: opacity 0.3s;
         }
         .toast.show { opacity: 1; }
+        
+        .admin-section {
+            border: 2px solid #ffc107;
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .admin-checkbox {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 8px;
+        }
+        
+        .admin-checkbox input[type="checkbox"] {
+            margin-right: 12px;
+            transform: scale(1.3);
+            accent-color: #4CAF50;
+        }
+        
+        button:disabled {
+            background: #ccc !important;
+            cursor: not-allowed !important;
+            transform: none !important;
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+        
+        .metric-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-2px);
+        }
+        
+        .metric-value {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .metric-label {
+            color: #666;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
     </style>
 </head>
 <body>
@@ -232,6 +771,18 @@ HTML_TEMPLATE = """
         <p>Test the entire pizza agent process from prompt to coupon:</p>
         <button onclick="testFullWorkflow()">🚀 Test Full Pizza Agent Workflow</button>
         <div id="workflowResult"></div>
+    </div>
+    
+    <div class="container">
+        <h3>👑 Admin Access</h3>
+        <p>Event organizers can access detailed analytics and insights:</p>
+        <div style="background: #fff3cd; border: 2px solid #ffc107; padding: 15px; border-radius: 8px; margin: 15px 0;">
+            <p style="margin: 10px 0;"><strong>🔐 Admin Dashboard Available</strong></p>
+            <p style="margin: 10px 0;">Access comprehensive event analytics, story summaries, and recommendations for future events.</p>
+            <a href="/admin" style="display: inline-block; background: #ffc107; color: #856404; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 10px 0;">
+                🚀 Go to Admin Dashboard
+            </a>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -530,7 +1081,7 @@ HTML_TEMPLATE = """
             }
         }
         
-        // Auto-resize textarea
+        // Auto-resize textarea and initialize page
         document.addEventListener('DOMContentLoaded', function() {
             const textarea = document.getElementById('story');
             if (textarea) {
@@ -699,6 +1250,38 @@ def check_email_config():
     result = test_email_configuration()
     return jsonify(result)
 
+@app.route('/admin')
+def admin_dashboard():
+    """Admin dashboard page"""
+    return render_template_string(ADMIN_TEMPLATE)
+
+@app.route('/admin_summary', methods=['POST'])
+def admin_summary():
+    """Generate admin summary of all reviews (with simple admin validation)"""
+    data = request.json
+    admin_confirmation = data.get('admin_confirmed', False)
+    
+    if not admin_confirmation:
+        return jsonify({
+            'error': 'Admin confirmation required',
+            'message': 'Please confirm you are an admin to access this feature'
+        }), 403
+    
+    try:
+        # Load analytics and generate summary
+        from utils import PizzaAgentAnalytics
+        analytics = PizzaAgentAnalytics("pizza_agent_analytics.json")
+        summary_data = analytics.generate_event_summary()
+        
+        return jsonify({
+            'success': True,
+            'summary': summary_data
+        })
+    except Exception as e:
+        return jsonify({
+            'error': f'Failed to generate summary: {str(e)}'
+        }), 500
+
 @app.route('/test_workflow')
 def test_workflow():
     """Test the complete pizza agent workflow"""
@@ -750,7 +1333,7 @@ def test_workflow():
 
 if __name__ == '__main__':
     print("🍕 Starting Pizza Agent Web Test Interface")
-    print("📱 Open your browser to: http://127.0.0.1:5003")
+    print("📱 Open your browser to: http://127.0.0.1:5005")
     print("🔧 This interface tests the pizza agent functionality directly")
     print()
-    app.run(debug=True, host='127.0.0.1', port=5003)
+    app.run(debug=True, host='127.0.0.1', port=5005)

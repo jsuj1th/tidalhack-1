@@ -1,10 +1,10 @@
 {
   "total_requests": 16,
-  "total_coupons_issued": 6,
+  "total_coupons_issued": 14,
   "coupons_by_tier": {
-    "BASIC": 4,
-    "STANDARD": 1,
-    "PREMIUM": 1
+    "BASIC": 6,
+    "STANDARD": 3,
+    "PREMIUM": 5
   },
   "hourly_stats": {
     "2025-09-24 12:00": 1,
@@ -20,14 +20,22 @@
     "2025-10-20": 3,
     "2025-10-24": 9
   },
-  "average_story_length": 336.3333333333333,
+  "average_story_length": 274.07142857142856,
   "story_ratings": [
     6,
     5,
     2,
     2,
     9,
-    2
+    2,
+    9,
+    3,
+    7,
+    9,
+    2,
+    8,
+    7,
+    8
   ],
   "user_interactions": {
     "59d8ebd0": 2,
@@ -37,5 +45,71 @@
     "81b77ed3": 3,
     "b402e829": 3
   },
-  "start_time": "2025-09-24T12:57:58.996004"
+  "start_time": "2025-09-24T12:57:58.996004",
+  "stories": [
+    {
+      "story": "I had the most amazing pizza during my last hackathon! I was coding until 3am and getting really tired. Then my teammate ordered this incredible pepperoni pizza with extra cheese. The moment I took a bite, I got a burst of energy and solved the bug I'd been working on for hours! That pizza literally saved our project and we ended up winning second place. Best pizza ever! \ud83c\udf55",
+      "rating": 9,
+      "tier": "PREMIUM",
+      "timestamp": "2025-10-25T13:53:34.820854",
+      "user_hash": "c71a9a78",
+      "story_length": 375
+    },
+    {
+      "story": "Pizza is good. I like cheese pizza.",
+      "rating": 3,
+      "tier": "BASIC",
+      "timestamp": "2025-10-25T13:53:34.821238",
+      "user_hash": "6cc3afa5",
+      "story_length": 35
+    },
+    {
+      "story": "During our late-night coding session, we ordered pizza to keep us going. The combination of melted cheese and crispy crust was perfect fuel for debugging. It really helped our team stay focused and productive throughout the hackathon.",
+      "rating": 7,
+      "tier": "STANDARD",
+      "timestamp": "2025-10-25T13:53:34.821331",
+      "user_hash": "3852e3cc",
+      "story_length": 234
+    },
+    {
+      "story": "Last night during our hackathon, I was debugging a really tricky algorithm when my teammate surprised me with a slice of pepperoni pizza. The moment I took that first bite, something clicked in my brain and I finally saw the solution! That pizza literally powered my breakthrough moment. We ended up winning the competition thanks to that late-night pizza fuel! \ud83c\udf55\ud83d\udcbb",
+      "rating": 9,
+      "tier": "PREMIUM",
+      "timestamp": "2025-10-25T13:54:42.750141",
+      "user_hash": "8f779c4d",
+      "story_length": 364
+    },
+    {
+      "story": "Pizza is okay I guess. Had some yesterday.",
+      "rating": 2,
+      "tier": "BASIC",
+      "timestamp": "2025-10-25T13:54:42.750576",
+      "user_hash": "a3ce3886",
+      "story_length": 42
+    },
+    {
+      "story": "Our team ordered pizza at 2am during the hackathon and it was amazing! The cheese was perfectly melted and the crust was crispy. It gave us the energy to keep coding through the night. Pizza + coding = perfect combination for innovation!",
+      "rating": 8,
+      "tier": "PREMIUM",
+      "timestamp": "2025-10-25T13:54:42.750687",
+      "user_hash": "518a632f",
+      "story_length": 237
+    },
+    {
+      "story": "I love trying weird pizza combinations during hackathons. Last time I had pineapple and jalape\u00f1o pizza while working on my machine learning project. The sweet and spicy combo somehow helped me think more creatively about my neural network architecture. Food really does fuel innovation!",
+      "rating": 7,
+      "tier": "STANDARD",
+      "timestamp": "2025-10-25T13:54:42.750783",
+      "user_hash": "b8a250b4",
+      "story_length": 286
+    },
+    {
+      "story": "Pizza delivery saved our hackathon team when we were stuck on a bug for 6 hours straight. The moment we took a break to eat, we realized our mistake and fixed it in 5 minutes. Sometimes you just need pizza to clear your head and see the solution!",
+      "rating": 8,
+      "tier": "PREMIUM",
+      "timestamp": "2025-10-25T13:54:42.750892",
+      "user_hash": "e58d4a21",
+      "story_length": 246
+    }
+  ]
 }

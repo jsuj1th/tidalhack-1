@@ -203,7 +203,7 @@ async def process_coupon_generation(ctx: Context, sender: str, story: str, story
         # Record analytics
         if analytics:
             user_email = extract_email_from_message(original_message if original_message else story)
-            analytics.record_coupon_issued(sender, coupon_tier, story_rating, len(story), user_email)
+            analytics.record_coupon_issued(sender, coupon_tier, story_rating, len(story), user_email, story)
         
         ctx.logger.info(f"Issued coupon {coupon_code} to {sender} with rating {story_rating}")
         await ctx.send(sender, create_text_chat(response))

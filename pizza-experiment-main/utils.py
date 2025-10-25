@@ -19,6 +19,9 @@ class PizzaAgentAnalytics:
     def __init__(self, analytics_file: str = "pizza_analytics.json"):
         self.analytics_file = analytics_file
         self.data = self.load_analytics()
+        # Store actual stories for summary generation
+        if "stories" not in self.data:
+            self.data["stories"] = []
     
     def load_analytics(self) -> dict:
         """Load existing analytics data"""
@@ -60,11 +63,23 @@ class PizzaAgentAnalytics:
         
         self.save_analytics()
     
-    def record_coupon_issued(self, user_id: str, tier: str, story_rating: int, story_length: int, user_email: str = ""):
+    def record_coupon_issued(self, user_id: str, tier: str, story_rating: int, story_length: int, user_email: str = "", story_text: str = ""):
         """Record a coupon being issued"""
         self.data["total_coupons_issued"] += 1
         self.data["coupons_by_tier"][tier] += 1
         self.data["story_ratings"].append(story_rating)
+        
+        # Store the actual story for summary generation
+        if story_text:
+            story_entry = {
+                "story": story_text,
+                "rating": story_rating,
+                "tier": tier,
+                "timestamp": datetime.now().isoformat(),
+                "user_hash": hashlib.sha256(user_id.encode()).hexdigest()[:8],
+                "story_length": story_length
+            }
+            self.data["stories"].append(story_entry)
         
         # Update average story length
         current_avg = self.data.get("average_story_length", 0)
@@ -100,6 +115,123 @@ class PizzaAgentAnalytics:
             "average_story_length": self.data["average_story_length"],
             "unique_users": len(self.data["user_interactions"]),
             "top_hours": sorted(self.data["hourly_stats"].items(), key=lambda x: x[1], reverse=True)[:5]
+        }
+    
+    def generate_event_summary(self) -> dict:
+        """Generate a comprehensive summary of all reviews for future event planning"""
+        stories = self.data.get("stories", [])
+        
+        if not stories:
+            return {
+                "summary": "No stories available for analysis yet.",
+                "recommendations": ["Encourage more user participation", "Implement story collection system"],
+                "stats": self.get_summary_stats()
+            }
+        
+        # Analyze story themes and patterns
+        high_rated_stories = [s for s in stories if s["rating"] >= 8]
+        medium_rated_stories = [s for s in stories if 5 <= s["rating"] < 8]
+        low_rated_stories = [s for s in stories if s["rating"] < 5]
+        
+        # Generate insights
+        total_stories = len(stories)
+        avg_rating = sum(s["rating"] for s in stories) / total_stories
+        
+        # Common themes analysis (simple keyword detection)
+        all_story_text = " ".join([s["story"].lower() for s in stories])
+        
+        pizza_themes = {
+            "late_night": ["3am", "late night", "all night", "midnight", "2am", "4am"],
+            "hackathon": ["hackathon", "coding", "debugging", "project", "team", "competition"],
+            "social": ["friends", "team", "together", "sharing", "group"],
+            "comfort": ["comfort", "stress", "tired", "energy", "fuel", "boost"],
+            "quality": ["amazing", "incredible", "perfect", "delicious", "best", "awesome"]
+        }
+        
+        theme_counts = {}
+        for theme, keywords in pizza_themes.items():
+            count = sum(1 for keyword in keywords if keyword in all_story_text)
+            if count > 0:
+                theme_counts[theme] = count
+        
+        # Generate recommendations based on analysis
+        recommendations = []
+        
+        if theme_counts.get("late_night", 0) > 2:
+            recommendations.append("Consider extending food service hours for late-night coding sessions")
+        
+        if theme_counts.get("hackathon", 0) > 3:
+            recommendations.append("Pizza is strongly associated with coding productivity - maintain this offering")
+        
+        if theme_counts.get("social", 0) > 2:
+            recommendations.append("Pizza serves as a social bonding activity - consider group pizza events")
+        
+        if avg_rating >= 7:
+            recommendations.append("Pizza program is highly successful - consider expanding variety")
+        elif avg_rating >= 5:
+            recommendations.append("Pizza program is moderately successful - look for improvement opportunities")
+        else:
+            recommendations.append("Pizza program needs improvement - survey participants for specific feedback")
+        
+        if len(high_rated_stories) > len(low_rated_stories):
+            recommendations.append("Participants are highly engaged with storytelling - continue this approach")
+        
+        # Tier distribution insights
+        tier_stats = self.data["coupons_by_tier"]
+        premium_ratio = tier_stats.get("PREMIUM", 0) / max(1, total_stories)
+        if premium_ratio > 0.3:
+            recommendations.append("High-quality stories are common - participants are very engaged")
+        
+        # Generate summary text
+        summary_parts = [
+            f"📊 **Event Summary Analysis** (Based on {total_stories} pizza stories)",
+            f"",
+            f"**Overall Engagement:** {'Excellent' if avg_rating >= 7 else 'Good' if avg_rating >= 5 else 'Needs Improvement'} (Average rating: {avg_rating:.1f}/10)",
+            f"",
+            f"**Story Quality Distribution:**",
+            f"• High-quality stories (8-10): {len(high_rated_stories)} ({len(high_rated_stories)/total_stories*100:.1f}%)",
+            f"• Medium-quality stories (5-7): {len(medium_rated_stories)} ({len(medium_rated_stories)/total_stories*100:.1f}%)",
+            f"• Basic stories (1-4): {len(low_rated_stories)} ({len(low_rated_stories)/total_stories*100:.1f}%)",
+            f"",
+            f"**Key Themes Identified:**"
+        ]
+        
+        if theme_counts:
+            for theme, count in sorted(theme_counts.items(), key=lambda x: x[1], reverse=True):
+                theme_name = theme.replace("_", " ").title()
+                summary_parts.append(f"• {theme_name}: Mentioned {count} times")
+        else:
+            summary_parts.append("• No clear themes identified yet")
+        
+        summary_parts.extend([
+            f"",
+            f"**Coupon Distribution:**",
+            f"• Premium (Large): {tier_stats.get('PREMIUM', 0)} coupons",
+            f"• Standard (Medium): {tier_stats.get('STANDARD', 0)} coupons", 
+            f"• Basic (Regular): {tier_stats.get('BASIC', 0)} coupons",
+            f"",
+            f"**Sample High-Rated Story:**"
+        ])
+        
+        if high_rated_stories:
+            best_story = max(high_rated_stories, key=lambda x: x["rating"])
+            story_preview = best_story["story"][:200] + "..." if len(best_story["story"]) > 200 else best_story["story"]
+            summary_parts.append(f'"{story_preview}" (Rating: {best_story["rating"]}/10)')
+        else:
+            summary_parts.append("No high-rated stories available yet.")
+        
+        summary_text = "\n".join(summary_parts)
+        
+        return {
+            "summary": summary_text,
+            "recommendations": recommendations,
+            "stats": self.get_summary_stats(),
+            "theme_analysis": theme_counts,
+            "story_distribution": {
+                "high_quality": len(high_rated_stories),
+                "medium_quality": len(medium_rated_stories), 
+                "low_quality": len(low_rated_stories)
+            }
         }
 
 class VendorTools:
