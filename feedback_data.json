@@ -1,0 +1,58 @@
+[
+  {
+    "feedback_id": "web_20251025_110635",
+    "user_email": "julakantisujith2@gmail.com",
+    "feedback_text": "Needs more Swag like Hoodies",
+    "timestamp": "2025-10-25T11:06:35.321477",
+    "hackathon_id": "DEV24",
+    "analysis": {
+      "sentiment": "positive",
+      "category": "LOGISTICS",
+      "keywords": [
+        "swag",
+        "hoodies",
+        "participant",
+        "incentive",
+        "gifts"
+      ],
+      "confidence": 0.9,
+      "insights": "The participant expresses a desire for more swag, specifically hoodies. This suggests they value tangible rewards and event merchandise.",
+      "actionable_items": [
+        "Increase the amount and variety of swag offered, including hoodies. Consider offering different sizes to accommodate all participants.",
+        "Budget accordingly for swag, recognizing its importance to participant satisfaction."
+      ]
+    },
+    "metadata": {
+      "source": "web_interface",
+      "message_length": 28
+    }
+  },
+  {
+    "feedback_id": "web_20251025_111317",
+    "user_email": "sujithjulakanti2002@gmail.com",
+    "feedback_text": "I want ti have a green hoodie as swag",
+    "timestamp": "2025-10-25T11:13:17.514115",
+    "hackathon_id": "DEV24",
+    "analysis": {
+      "sentiment": "neutral",
+      "category": "EXPECTATIONS",
+      "keywords": [
+        "green",
+        "hoodie",
+        "swag",
+        "participant",
+        "want"
+      ],
+      "confidence": 0.9,
+      "insights": "The participant expresses a desire for a green hoodie as part of the hackathon swag.",
+      "actionable_items": [
+        "Consider adding green hoodies to the swag options for future hackathons.",
+        "Gauge interest in different swag options before finalizing orders to optimize budget and participant satisfaction."
+      ]
+    },
+    "metadata": {
+      "source": "web_interface",
+      "message_length": 37
+    }
+  }
+]
