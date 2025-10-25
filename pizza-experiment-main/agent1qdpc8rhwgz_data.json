@@ -1,0 +1,17 @@
+{
+    "fd2ed0c3-9055-4cd4-9c00-de665fa6517c": "agent1qwnp0hyxrn4rdlk4pz7u4t4c3ekxgxe9xxkyt9nqz6mkw736jmd2vggc9fm",
+    "state_44BA4286": "coupon_issued",
+    "474614d9-a375-4d37-bde2-38bdb938406f": "agent1qgu4tlas5s5j8mzfcv5yw8gvler83gq0y7qwuvarlu060q6d9m3gx4jucdh",
+    "state_81B77ED3": "coupon_issued",
+    "f820fd87-95c9-464e-b0ad-0a1402d874ce": "agent1qwnp0hyxrn4rdlk4pz7u4t4c3ekxgxe9xxkyt9nqz6mkw736jmd2vggc9fm",
+    "coupon_issued_44BA4286": true,
+    "coupon_code_44BA4286": "PIZZA-CONF24-BASIC-44BA42-0654",
+    "015f7ef7-c0e1-4caa-b0da-ffb3c71f8c8b": "agent1qwnp0hyxrn4rdlk4pz7u4t4c3ekxgxe9xxkyt9nqz6mkw736jmd2vggc9fm",
+    "c94d3b5f-fb69-4063-8144-0f1c8653f574": "agent1qv2yv2u2a2he8w43gms4ju65u358x7djm5l2n903r2r26szavk587q0rg0p",
+    "state_B402E829": "coupon_issued",
+    "coupon_issued_B402E829": true,
+    "coupon_code_B402E829": "PIZZA-CONF24-PREMIUM-2C559748-0700",
+    "bf89e006-aad7-4cd9-b9da-18291ff6961e": "agent1qgu4tlas5s5j8mzfcv5yw8gvler83gq0y7qwuvarlu060q6d9m3gx4jucdh",
+    "coupon_issued_81B77ED3": true,
+    "coupon_code_81B77ED3": "PIZZA-CONF24-BASIC-D009BFE2-0705"
+}
