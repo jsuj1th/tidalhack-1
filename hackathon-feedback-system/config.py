@@ -3,9 +3,11 @@
 Configuration file for Hackathon Feedback Collection Agent
 AWS-ready production configuration
 """
-
+from dotenv import load_dotenv
 import os
 from datetime import datetime
+
+load_dotenv()
 
 # Hackathon Event Settings
 HACKATHON_ID = "HACK2024"  # Change for different events
@@ -31,10 +33,11 @@ DYNAMODB_ENDPOINT = os.getenv("DYNAMODB_ENDPOINT")  # For local development
 S3_BUCKET_NAME = os.getenv("S3_BUCKET_NAME", "hackathon-feedback-data")
 S3_BACKUP_PREFIX = "feedback-backups/"
 
-# OpenAI Configuration
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-OPENAI_MODEL = "gpt-4o-mini"
-OPENAI_TEMPERATURE = 0.7
+# Google Gemini Configuration
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+GEMINI_MODEL = "gemini-2.0-flash-exp"  # or "gemini-1.5-pro" for stable version
+GEMINI_TEMPERATURE = 0.7
+GEMINI_MAX_TOKENS = 1000
 
 # Feedback Collection Settings
 MIN_FEEDBACK_LENGTH = 20  # Minimum characters for valid feedback
@@ -51,6 +54,7 @@ USE_AI_ANALYSIS = True  # Use AI for feedback analysis
 USE_AI_RESPONSES = True   # Generate personalized AI responses
 USE_AI_SENTIMENT = True  # Analyze sentiment of feedback
 USE_AI_CATEGORIZATION = True  # Categorize feedback automatically
+USE_GEMINI = True  # Use Google Gemini instead of OpenAI
 
 # Security Settings
 ENABLE_SPAM_PROTECTION = True

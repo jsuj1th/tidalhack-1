@@ -4,7 +4,7 @@ A production-ready AI-powered system for collecting and analyzing participant fe
 
 ## 🌟 Features
 
-- **AI-Powered Analysis**: Automatic sentiment analysis and categorization using OpenAI GPT
+- **AI-Powered Analysis**: Automatic sentiment analysis and categorization using Google Gemini 2.0 Flash
 - **Real-time Collection**: Interactive chat-based feedback collection
 - **AWS Integration**: Full AWS deployment with DynamoDB, S3, and CloudWatch
 - **Analytics Dashboard**: Comprehensive feedback analytics and insights
@@ -38,7 +38,7 @@ A production-ready AI-powered system for collecting and analyzing participant fe
 
 - Python 3.11+
 - AWS Account with appropriate permissions
-- OpenAI API key
+- Google AI Studio API key (for Gemini)
 - Docker (optional, for local development)
 
 ### 2. Installation
@@ -62,7 +62,7 @@ Edit `.env` file with your settings:
 
 ```bash
 # Required
-OPENAI_API_KEY=your_openai_api_key
+GOOGLE_API_KEY=your_google_api_key
 AWS_ACCESS_KEY_ID=your_aws_access_key
 AWS_SECRET_ACCESS_KEY=your_aws_secret_key
 AWS_REGION=us-east-1
@@ -242,7 +242,7 @@ CLOUDWATCH_METRICS_NAMESPACE = "HackathonFeedback"
 # Test core functions
 python functions.py
 
-# Test AI functions (requires OpenAI API key)
+# Test AI functions (requires Google API key)
 python ai_functions.py
 
 # Test AWS services (requires AWS credentials)
@@ -296,7 +296,7 @@ pytest tests/
 
 **Agent not responding:**
 - Check AWS credentials and permissions
-- Verify OpenAI API key is valid
+- Verify Google API key is valid
 - Check CloudWatch logs for errors
 
 **DynamoDB errors:**
@@ -305,7 +305,7 @@ pytest tests/
 - Verify region configuration
 
 **AI analysis failing:**
-- Check OpenAI API key and quota
+- Check Google API key and quota
 - Review API rate limits
 - Check network connectivity
 

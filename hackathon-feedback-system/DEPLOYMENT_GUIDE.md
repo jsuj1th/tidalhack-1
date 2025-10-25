@@ -5,7 +5,7 @@ This guide will help you deploy the hackathon feedback system to AWS, even if yo
 ## 📋 Prerequisites
 
 1. **AWS Account**: Sign up at [aws.amazon.com](https://aws.amazon.com)
-2. **OpenAI API Key**: Get one from [platform.openai.com](https://platform.openai.com)
+2. **Google AI Studio API Key**: Get one from [aistudio.google.com](https://aistudio.google.com)
 3. **Python 3.11+**: Download from [python.org](https://python.org)
 4. **Git**: Download from [git-scm.com](https://git-scm.com)
 
@@ -51,11 +51,11 @@ aws configure
 # Default output format: json
 ```
 
-## 🔑 Step 2: Get OpenAI API Key
+## 🔑 Step 2: Get Google AI Studio API Key
 
-1. Go to [platform.openai.com](https://platform.openai.com)
-2. Sign up or log in
-3. Go to API Keys section
+1. Go to [aistudio.google.com](https://aistudio.google.com)
+2. Sign up or log in with your Google account
+3. Click "Get API key" in the left sidebar
 4. Create a new API key
 5. **Important**: Save this key securely
 
@@ -78,7 +78,7 @@ cp .env.example .env
 Edit `.env` file:
 ```bash
 # Required - Replace with your values
-OPENAI_API_KEY=sk-your-openai-key-here
+GOOGLE_API_KEY=your-google-api-key-here
 AWS_ACCESS_KEY_ID=your-aws-access-key
 AWS_SECRET_ACCESS_KEY=your-aws-secret-key
 AWS_REGION=us-east-1
@@ -229,9 +229,9 @@ aws sts get-caller-identity
 aws configure
 ```
 
-**"OpenAI API key invalid"**
-- Check your API key at platform.openai.com
-- Make sure you have credits available
+**"Google API key invalid"**
+- Check your API key at aistudio.google.com
+- Make sure Gemini API is enabled
 - Verify the key is correctly set in .env
 
 **"DynamoDB table not found"**
@@ -263,14 +263,14 @@ python deployment/setup_aws.py
 - **Lambda**: 1M free requests, 400,000 GB-seconds
 - **CloudWatch**: 10 custom metrics, 5GB log ingestion
 
-### OpenAI Costs
-- **GPT-4o-mini**: ~$0.15 per 1M input tokens
-- **Estimated**: $5-20 for a typical hackathon (100-500 participants)
+### Google Gemini Costs
+- **Gemini 2.0 Flash**: Free tier with generous limits
+- **Estimated**: $0-5 for a typical hackathon (100-500 participants)
 
 ### Total Estimated Cost
-- **Small hackathon** (50 participants): $2-5
-- **Medium hackathon** (200 participants): $10-15
-- **Large hackathon** (500+ participants): $20-30
+- **Small hackathon** (50 participants): $0-2
+- **Medium hackathon** (200 participants): $2-5
+- **Large hackathon** (500+ participants): $5-10
 
 ## 🎉 You're Ready!
 

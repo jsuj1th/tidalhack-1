@@ -30,7 +30,7 @@ from aws_services import (
     get_feedback_from_dynamodb,
     test_aws_services
 )
-from config import HACKATHON_ID, HACKATHON_NAME, OPENAI_API_KEY
+from config import HACKATHON_ID, HACKATHON_NAME, GOOGLE_API_KEY
 
 class FeedbackSystemTester:
     def __init__(self):
@@ -90,8 +90,8 @@ class FeedbackSystemTester:
         print("\n🤖 Testing AI Functions")
         print("-" * 30)
         
-        if not OPENAI_API_KEY:
-            print("⚠️  OpenAI API key not configured - skipping AI tests")
+        if not GOOGLE_API_KEY:
+            print("⚠️  Google API key not configured - skipping AI tests")
             return
         
         test_feedback = self.test_feedback[0]  # Use first feedback for AI tests

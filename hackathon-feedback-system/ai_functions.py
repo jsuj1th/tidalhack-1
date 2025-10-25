@@ -1,10 +1,10 @@
 # ai_functions.py
 """
 AI-powered functions for feedback analysis and response generation
-Uses OpenAI GPT models for intelligent processing
+Uses Google Gemini API for intelligent processing
 """
 
-import openai
+import google.generativeai as genai
 import json
 import asyncio
 from typing import Dict, List, Tuple, Optional
@@ -12,29 +12,34 @@ import logging
 from datetime import datetime
 
 from config import (
-    OPENAI_API_KEY,
-    OPENAI_MODEL,
-    OPENAI_TEMPERATURE,
+    GOOGLE_API_KEY,
+    GEMINI_MODEL,
+    GEMINI_TEMPERATURE,
+    GEMINI_MAX_TOKENS,
     HACKATHON_NAME,
-    HACKATHON_ID
+    HACKATHON_ID,
+    USE_GEMINI
 )
 
 logger = logging.getLogger(__name__)
 
-# Initialize OpenAI client
-if OPENAI_API_KEY:
-    openai.api_key = OPENAI_API_KEY
+# Initialize Gemini client
+if GOOGLE_API_KEY:
+    genai.configure(api_key=GOOGLE_API_KEY)
+    model = genai.GenerativeModel(GEMINI_MODEL)
+    logger.info(f"Initialized Gemini model: {GEMINI_MODEL}")
 else:
-    logger.warning("OpenAI API key not found. AI features will be disabled.")
+    logger.warning("Google API key not found. AI features will be disabled.")
+    model = None
 
 async def ai_analyze_feedback(feedback_text: str) -> Dict:
     """
-    Comprehensive AI analysis of feedback text
+    Comprehensive AI analysis of feedback text using Gemini
     Returns sentiment, category, keywords, and insights
     """
     try:
-        if not OPENAI_API_KEY:
-            raise Exception("OpenAI API key not configured")
+        if not GOOGLE_API_KEY or not model:
+            raise Exception("Google API key not configured")
         
         prompt = f"""
         Analyze this hackathon participant feedback and provide a structured analysis:
@@ -49,20 +54,31 @@ async def ai_analyze_feedback(feedback_text: str) -> Dict:
         5. insights: brief summary of main points
         6. actionable_items: specific suggestions for organizers (if any)
         
-        Return only valid JSON.
+        Return only valid JSON without any markdown formatting or code blocks.
         """
         
-        response = await openai.ChatCompletion.acreate(
-            model=OPENAI_MODEL,
-            messages=[
-                {"role": "system", "content": "You are an expert at analyzing hackathon participant feedback. Always respond with valid JSON."},
-                {"role": "user", "content": prompt}
-            ],
-            temperature=OPENAI_TEMPERATURE,
-            max_tokens=500
+        # Configure generation parameters
+        generation_config = genai.types.GenerationConfig(
+            temperature=GEMINI_TEMPERATURE,
+            max_output_tokens=GEMINI_MAX_TOKENS,
         )
         
-        result = json.loads(response.choices[0].message.content)
+        # Generate response
+        response = await asyncio.to_thread(
+            model.generate_content,
+            prompt,
+            generation_config=generation_config
+        )
+        
+        # Parse JSON response
+        response_text = response.text.strip()
+        # Remove any markdown code blocks if present
+        if response_text.startswith('```json'):
+            response_text = response_text.replace('```json', '').replace('```', '').strip()
+        elif response_text.startswith('```'):
+            response_text = response_text.replace('```', '').strip()
+        
+        result = json.loads(response_text)
         
         # Validate required fields
         required_fields = ["sentiment", "category", "keywords", "confidence"]
@@ -70,11 +86,11 @@ async def ai_analyze_feedback(feedback_text: str) -> Dict:
             if field not in result:
                 result[field] = "unknown" if field != "confidence" else 0.5
         
-        logger.info(f"AI analysis completed: {result['sentiment']}, {result['category']}")
+        logger.info(f"Gemini analysis completed: {result['sentiment']}, {result['category']}")
         return result
         
     except Exception as e:
-        logger.error(f"AI analysis failed: {e}")
+        logger.error(f"Gemini analysis failed: {e}")
         # Return fallback analysis
         return {
             "sentiment": "neutral",
@@ -87,11 +103,11 @@ async def ai_analyze_feedback(feedback_text: str) -> Dict:
 
 async def ai_generate_response(feedback_text: str, analysis_results: Dict) -> str:
     """
-    Generate personalized response to participant feedback
+    Generate personalized response to participant feedback using Gemini
     """
     try:
-        if not OPENAI_API_KEY:
-            raise Exception("OpenAI API key not configured")
+        if not GOOGLE_API_KEY or not model:
+            raise Exception("Google API key not configured")
         
         sentiment = analysis_results.get("sentiment", "neutral")
         category = analysis_results.get("category", "GENERAL")
@@ -114,34 +130,38 @@ async def ai_generate_response(feedback_text: str, analysis_results: Dict) -> st
         - End with excitement about the hackathon
         
         Don't mention the analysis details directly.
+        Return only the response text without any formatting or prefixes.
         """
         
-        response = await openai.ChatCompletion.acreate(
-            model=OPENAI_MODEL,
-            messages=[
-                {"role": "system", "content": f"You are the friendly feedback assistant for {HACKATHON_NAME}. Generate warm, personalized responses to participant feedback."},
-                {"role": "user", "content": prompt}
-            ],
-            temperature=OPENAI_TEMPERATURE + 0.1,  # Slightly more creative for responses
-            max_tokens=300
+        # Configure generation for more creative responses
+        generation_config = genai.types.GenerationConfig(
+            temperature=GEMINI_TEMPERATURE + 0.1,
+            max_output_tokens=400,
         )
         
-        generated_response = response.choices[0].message.content.strip()
-        logger.info("AI response generated successfully")
+        # Generate response
+        response = await asyncio.to_thread(
+            model.generate_content,
+            prompt,
+            generation_config=generation_config
+        )
+        
+        generated_response = response.text.strip()
+        logger.info("Gemini response generated successfully")
         return generated_response
         
     except Exception as e:
-        logger.error(f"AI response generation failed: {e}")
+        logger.error(f"Gemini response generation failed: {e}")
         # Return fallback response
         return generate_fallback_response(analysis_results)
 
 async def ai_categorize_feedback(feedback_text: str) -> str:
     """
-    Categorize feedback using AI
+    Categorize feedback using Gemini
     """
     try:
-        if not OPENAI_API_KEY:
-            raise Exception("OpenAI API key not configured")
+        if not GOOGLE_API_KEY or not model:
+            raise Exception("Google API key not configured")
         
         categories = {
             "EXPECTATIONS": "Goals, hopes, what they want to achieve or learn",
@@ -161,20 +181,23 @@ async def ai_categorize_feedback(feedback_text: str) -> str:
         
         Feedback: "{feedback_text}"
         
-        Return only the category name (e.g., "EXPECTATIONS").
+        Return only the category name (e.g., "EXPECTATIONS"). No explanation needed.
         """
         
-        response = await openai.ChatCompletion.acreate(
-            model=OPENAI_MODEL,
-            messages=[
-                {"role": "system", "content": "You categorize hackathon feedback. Return only the category name."},
-                {"role": "user", "content": prompt}
-            ],
-            temperature=0.1,  # Low temperature for consistent categorization
-            max_tokens=20
+        # Configure for consistent categorization
+        generation_config = genai.types.GenerationConfig(
+            temperature=0.1,
+            max_output_tokens=20,
         )
         
-        category = response.choices[0].message.content.strip().upper()
+        # Generate response
+        response = await asyncio.to_thread(
+            model.generate_content,
+            prompt,
+            generation_config=generation_config
+        )
+        
+        category = response.text.strip().upper()
         
         # Validate category
         if category in categories:
@@ -183,16 +206,16 @@ async def ai_categorize_feedback(feedback_text: str) -> str:
             return "GENERAL"
             
     except Exception as e:
-        logger.error(f"AI categorization failed: {e}")
+        logger.error(f"Gemini categorization failed: {e}")
         return "GENERAL"
 
 async def ai_detect_spam(feedback_text: str) -> bool:
     """
-    Detect if feedback is spam or inappropriate using AI
+    Detect if feedback is spam or inappropriate using Gemini
     """
     try:
-        if not OPENAI_API_KEY:
-            raise Exception("OpenAI API key not configured")
+        if not GOOGLE_API_KEY or not model:
+            raise Exception("Google API key not configured")
         
         prompt = f"""
         Analyze if this text is spam, inappropriate, or not genuine feedback for a hackathon:
@@ -209,33 +232,36 @@ async def ai_detect_spam(feedback_text: str) -> bool:
         Return only "true" if it's spam/inappropriate, "false" if it's legitimate feedback.
         """
         
-        response = await openai.ChatCompletion.acreate(
-            model=OPENAI_MODEL,
-            messages=[
-                {"role": "system", "content": "You detect spam and inappropriate content. Return only 'true' or 'false'."},
-                {"role": "user", "content": prompt}
-            ],
+        # Configure for consistent spam detection
+        generation_config = genai.types.GenerationConfig(
             temperature=0.1,
-            max_tokens=10
+            max_output_tokens=10,
         )
         
-        result = response.choices[0].message.content.strip().lower()
+        # Generate response
+        response = await asyncio.to_thread(
+            model.generate_content,
+            prompt,
+            generation_config=generation_config
+        )
+        
+        result = response.text.strip().lower()
         return result == "true"
         
     except Exception as e:
-        logger.error(f"AI spam detection failed: {e}")
+        logger.error(f"Gemini spam detection failed: {e}")
         return False  # Default to not spam if detection fails
 
 async def ai_extract_insights(feedback_list: List[str]) -> Dict:
     """
-    Extract insights and trends from multiple feedback submissions
+    Extract insights and trends from multiple feedback submissions using Gemini
     """
     try:
-        if not OPENAI_API_KEY or not feedback_list:
-            raise Exception("OpenAI API key not configured or no feedback provided")
+        if not GOOGLE_API_KEY or not model or not feedback_list:
+            raise Exception("Google API key not configured or no feedback provided")
         
         # Combine feedback (limit to prevent token overflow)
-        combined_feedback = "\n\n".join(feedback_list[:20])  # Limit to 20 pieces of feedback
+        combined_feedback = "\n\n".join(feedback_list[:15])  # Limit to 15 pieces for Gemini
         
         prompt = f"""
         Analyze these hackathon participant feedback submissions and extract key insights:
@@ -251,25 +277,36 @@ async def ai_extract_insights(feedback_list: List[str]) -> Dict:
         5. suggestions: actionable suggestions for organizers
         6. participant_types: types of participants based on feedback (e.g., "beginners", "experienced developers")
         
-        Return only valid JSON.
+        Return only valid JSON without any markdown formatting or code blocks.
         """
         
-        response = await openai.ChatCompletion.acreate(
-            model=OPENAI_MODEL,
-            messages=[
-                {"role": "system", "content": "You analyze hackathon feedback to extract insights for organizers. Always return valid JSON."},
-                {"role": "user", "content": prompt}
-            ],
+        # Configure generation
+        generation_config = genai.types.GenerationConfig(
             temperature=0.3,
-            max_tokens=800
+            max_output_tokens=1000,
         )
         
-        insights = json.loads(response.choices[0].message.content)
-        logger.info("AI insights extraction completed")
+        # Generate response
+        response = await asyncio.to_thread(
+            model.generate_content,
+            prompt,
+            generation_config=generation_config
+        )
+        
+        # Parse JSON response
+        response_text = response.text.strip()
+        # Remove any markdown code blocks if present
+        if response_text.startswith('```json'):
+            response_text = response_text.replace('```json', '').replace('```', '').strip()
+        elif response_text.startswith('```'):
+            response_text = response_text.replace('```', '').strip()
+        
+        insights = json.loads(response_text)
+        logger.info("Gemini insights extraction completed")
         return insights
         
     except Exception as e:
-        logger.error(f"AI insights extraction failed: {e}")
+        logger.error(f"Gemini insights extraction failed: {e}")
         return {
             "common_themes": [],
             "sentiment_summary": "mixed",
@@ -281,11 +318,11 @@ async def ai_extract_insights(feedback_list: List[str]) -> Dict:
 
 async def ai_generate_summary_report(hackathon_id: str, feedback_data: List[Dict]) -> str:
     """
-    Generate a comprehensive summary report of all feedback
+    Generate a comprehensive summary report of all feedback using Gemini
     """
     try:
-        if not OPENAI_API_KEY or not feedback_data:
-            raise Exception("OpenAI API key not configured or no feedback data")
+        if not GOOGLE_API_KEY or not model or not feedback_data:
+            raise Exception("Google API key not configured or no feedback data")
         
         # Prepare summary statistics
         total_feedback = len(feedback_data)
@@ -303,7 +340,7 @@ async def ai_generate_summary_report(hackathon_id: str, feedback_data: List[Dict
             category_counts[cat] = category_counts.get(cat, 0) + 1
         
         # Sample feedback texts
-        sample_feedback = [f["feedback_text"] for f in feedback_data[:10]]
+        sample_feedback = [f["feedback_text"] for f in feedback_data[:8]]  # Reduced for Gemini
         
         prompt = f"""
         Generate a comprehensive feedback summary report for {HACKATHON_NAME} (ID: {hackathon_id}).
@@ -327,22 +364,25 @@ async def ai_generate_summary_report(hackathon_id: str, feedback_data: List[Dict
         Format as markdown with clear sections and bullet points.
         """
         
-        response = await openai.ChatCompletion.acreate(
-            model=OPENAI_MODEL,
-            messages=[
-                {"role": "system", "content": "You are a professional event analyst creating comprehensive feedback reports for hackathon organizers."},
-                {"role": "user", "content": prompt}
-            ],
+        # Configure generation
+        generation_config = genai.types.GenerationConfig(
             temperature=0.4,
-            max_tokens=1500
+            max_output_tokens=2000,
         )
         
-        report = response.choices[0].message.content
-        logger.info("AI summary report generated")
+        # Generate response
+        response = await asyncio.to_thread(
+            model.generate_content,
+            prompt,
+            generation_config=generation_config
+        )
+        
+        report = response.text
+        logger.info("Gemini summary report generated")
         return report
         
     except Exception as e:
-        logger.error(f"AI summary report generation failed: {e}")
+        logger.error(f"Gemini summary report generation failed: {e}")
         return generate_fallback_report(hackathon_id, len(feedback_data) if feedback_data else 0)
 
 def generate_fallback_response(analysis_results: Dict) -> str:
@@ -399,13 +439,13 @@ Detailed AI analysis is currently unavailable. Please review individual feedback
 # Testing functions
 async def test_ai_functions():
     """Test AI functions with sample data"""
-    if not OPENAI_API_KEY:
-        print("❌ OpenAI API key not configured - skipping AI tests")
+    if not GOOGLE_API_KEY:
+        print("❌ Google API key not configured - skipping AI tests")
         return
     
     sample_feedback = "I'm really excited about this hackathon! I hope to learn about machine learning and build something with APIs. I'm a bit worried about finding a good team though."
     
-    print("Testing AI functions...")
+    print("Testing Gemini AI functions...")
     
     # Test analysis
     try:
@@ -427,6 +467,13 @@ async def test_ai_functions():
         print(f"✅ Category: {category}")
     except Exception as e:
         print(f"❌ Categorization failed: {e}")
+    
+    # Test spam detection
+    try:
+        is_spam = await ai_detect_spam("spam test asdf qwerty")
+        print(f"✅ Spam Detection: {'Spam detected' if is_spam else 'Not spam'}")
+    except Exception as e:
+        print(f"❌ Spam detection failed: {e}")
 
 if __name__ == "__main__":
     asyncio.run(test_ai_functions())
