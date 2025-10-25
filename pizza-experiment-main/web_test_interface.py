@@ -10,6 +10,8 @@ from functions import generate_coupon_code, evaluate_story_quality
 from ai_functions import ai_evaluate_story, ai_generate_personalized_response, ai_generate_dynamic_prompts
 from gemini_functions import gemini_evaluate_story, gemini_generate_response_message, gemini_generate_unique_prompt
 from config import USE_GEMINI, USE_AI_EVALUATION, USE_AI_RESPONSES, USE_AI_PROMPTS
+from email_utils import send_coupon_email, test_email_configuration, validate_email
+from user_config import get_user_email, get_test_config
 import json
 
 app = Flask(__name__)
@@ -50,6 +52,60 @@ HTML_TEMPLATE = """
             font-weight: bold; 
             text-align: center;
             position: relative;
+        }
+        
+        .email-section {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        
+        .email-input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            margin: 8px 0;
+        }
+        
+        .email-input:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+        
+        .email-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .email-status {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        .email-status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .email-status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .email-status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
         }
         
         .markdown-content {
@@ -139,6 +195,19 @@ HTML_TEMPLATE = """
         <p><strong>USE_AI_EVALUATION:</strong> {{ config.USE_AI_EVALUATION }}</p>
         <p><strong>USE_AI_RESPONSES:</strong> {{ config.USE_AI_RESPONSES }}</p>
         <p><strong>USE_AI_PROMPTS:</strong> {{ config.USE_AI_PROMPTS }}</p>
+        <p><strong>EMAIL_CONFIGURED:</strong> <span id="emailStatus">Checking...</span></p>
+    </div>
+    
+    <div class="container">
+        <h3>🍕 How It Works</h3>
+        <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #4CAF50;">
+            <p><strong>🎯 Share your pizza story → Get AI rating → Receive coupon → Redeem at CalHacks!</strong></p>
+            <ul style="margin: 10px 0;">
+                <li><strong>Better stories = Better coupons!</strong> (Premium/Standard/Basic tiers)</li>
+                <li><strong>Show your coupon code</strong> to any food vendor at the conference</li>
+                <li><strong>Get it via email</strong> for easy access on your phone</li>
+            </ul>
+        </div>
     </div>
     
     <div class="container">
@@ -242,6 +311,11 @@ HTML_TEMPLATE = """
                             <p><strong>Explanation:</strong> ${result.explanation}</p>
                         </div>
                         <p><strong>Method:</strong> <code>${result.method}</code></p>
+                        
+                        <div style="background: #fff3cd; border: 2px dashed #ffc107; padding: 15px; border-radius: 8px; margin: 15px 0; text-align: center;">
+                            <p style="margin: 5px 0;"><strong>💡 Want a coupon?</strong></p>
+                            <p style="margin: 5px 0;">Click "Generate Full Coupon Response" above to get your pizza coupon with redemption instructions!</p>
+                        </div>
                     </div>`;
             } finally {
                 button.textContent = originalText;
@@ -277,6 +351,34 @@ HTML_TEMPLATE = """
                         
                         <p><strong>Tier:</strong> ${formatTier(result.tier)}</p>
                         <p><strong>Rating:</strong> ${formatRating(result.rating)}</p>
+                        
+                        <div class="instructions" style="background: #e8f4fd; padding: 20px; border-radius: 10px; margin: 20px 0; border-left: 4px solid #2196F3;">
+                            <h5 style="margin-top: 0; color: #2196F3;"><span style="font-size: 1.2em;">📱</span> How to Redeem Your Coupon</h5>
+                            <ol style="margin: 10px 0; padding-left: 25px;">
+                                <li>Find any participating food vendor at CalHacks 12.0</li>
+                                <li>Show them this coupon code: <strong style="color: #e74c3c;">${result.coupon_code}</strong></li>
+                                <li>Enjoy your delicious ${result.tier.toLowerCase()} pizza! <span style="font-size: 1.2em;">🍕</span></li>
+                            </ol>
+                            
+                            <p><strong>What you get:</strong></p>
+                            <ul style="margin: 10px 0; padding-left: 25px;">
+                                ${result.tier === "PREMIUM" ? "<li>🏆 LARGE pizza with premium toppings!</li>" : ""}
+                                ${result.tier === "STANDARD" ? "<li>👍 MEDIUM pizza with your choice of toppings!</li>" : ""}
+                                ${result.tier === "BASIC" ? "<li>🙂 REGULAR pizza - still delicious!</li>" : ""}
+                            </ul>
+                        </div>
+                        
+                        <div class="email-section">
+                            <h5>📧 Email Coupon Option</h5>
+                            <p>Want to receive this coupon via email? Enter your email address:</p>
+                            <input type="email" class="email-input" id="emailInput-${Date.now()}" placeholder="your.email@example.com" value="{{ default_email }}">
+                            <div class="email-buttons">
+                                <button class="secondary" onclick="sendCouponEmail('${result.coupon_code}', '${result.tier}', ${result.rating}, \`${result.response.replace(/`/g, '\\\\`')}\`, this)">
+                                    📧 Send via Email
+                                </button>
+                            </div>
+                            <div id="emailResult-${Date.now()}" class="email-status" style="display: none;"></div>
+                        </div>
                         
                         <h5>🤖 Agent Response:</h5>
                         <div class="markdown-content" style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #4CAF50;">
@@ -343,6 +445,91 @@ HTML_TEMPLATE = """
             }
         }
         
+        // Send coupon via email
+        async function sendCouponEmail(couponCode, tier, rating, response, buttonElement) {
+            const emailInput = buttonElement.parentElement.parentElement.querySelector('.email-input');
+            const emailResult = buttonElement.parentElement.parentElement.querySelector('.email-status');
+            const email = emailInput.value.trim();
+            
+            if (!email) {
+                emailResult.textContent = 'Please enter an email address';
+                emailResult.className = 'email-status error';
+                emailResult.style.display = 'block';
+                return;
+            }
+            
+            // Basic email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                emailResult.textContent = 'Please enter a valid email address';
+                emailResult.className = 'email-status error';
+                emailResult.style.display = 'block';
+                return;
+            }
+            
+            const originalText = buttonElement.textContent;
+            buttonElement.innerHTML = '<span class="loading"></span> Sending...';
+            buttonElement.disabled = true;
+            
+            try {
+                const emailResponse = await fetch('/send_coupon_email', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        email: email,
+                        coupon_code: couponCode,
+                        tier: tier,
+                        rating: rating,
+                        personalized_message: response
+                    })
+                });
+                
+                const result = await emailResponse.json();
+                
+                if (result.success) {
+                    emailResult.textContent = `✅ ${result.message}`;
+                    emailResult.className = 'email-status success';
+                    showToast('Coupon sent via email successfully!');
+                    emailInput.value = ''; // Clear the input
+                } else {
+                    emailResult.textContent = `❌ ${result.message}`;
+                    emailResult.className = 'email-status error';
+                    showToast('Failed to send email', 'error');
+                }
+                
+                emailResult.style.display = 'block';
+                
+            } catch (error) {
+                emailResult.textContent = `❌ Error: ${error.message}`;
+                emailResult.className = 'email-status error';
+                emailResult.style.display = 'block';
+                showToast('Failed to send email', 'error');
+            } finally {
+                buttonElement.textContent = originalText;
+                buttonElement.disabled = false;
+            }
+        }
+        
+        // Check email configuration on page load
+        async function checkEmailConfiguration() {
+            try {
+                const response = await fetch('/check_email_config');
+                const result = await response.json();
+                const statusElement = document.getElementById('emailStatus');
+                
+                if (result.configured) {
+                    statusElement.textContent = '✅ Configured';
+                    statusElement.style.color = '#28a745';
+                } else {
+                    statusElement.textContent = '❌ Not Configured';
+                    statusElement.style.color = '#dc3545';
+                    statusElement.title = result.message;
+                }
+            } catch (error) {
+                document.getElementById('emailStatus').textContent = '❓ Unknown';
+            }
+        }
+        
         // Auto-resize textarea
         document.addEventListener('DOMContentLoaded', function() {
             const textarea = document.getElementById('story');
@@ -352,6 +539,9 @@ HTML_TEMPLATE = """
                     this.style.height = Math.max(120, this.scrollHeight) + 'px';
                 });
             }
+            
+            // Check email configuration
+            checkEmailConfiguration();
         });
     </script>
 </body>
@@ -367,7 +557,8 @@ def index():
         'USE_AI_RESPONSES': USE_AI_RESPONSES,
         'USE_AI_PROMPTS': USE_AI_PROMPTS
     }
-    return render_template_string(HTML_TEMPLATE, config=config_info)
+    default_email = get_user_email()
+    return render_template_string(HTML_TEMPLATE, config=config_info, default_email=default_email)
 
 @app.route('/evaluate_story', methods=['POST'])
 def evaluate_story():
@@ -479,6 +670,35 @@ def generate_prompt():
             'method': "Error fallback"
         })
 
+@app.route('/send_coupon_email', methods=['POST'])
+def send_coupon_email_route():
+    """Send coupon via email"""
+    data = request.json
+    email = data.get('email', '').strip()
+    coupon_code = data.get('coupon_code', '')
+    tier = data.get('tier', '')
+    rating = data.get('rating', 5)
+    personalized_message = data.get('personalized_message', '')
+    
+    if not email:
+        return jsonify({"success": False, "message": "Email address is required"})
+    
+    if not validate_email(email):
+        return jsonify({"success": False, "message": "Invalid email address format"})
+    
+    if not coupon_code:
+        return jsonify({"success": False, "message": "Coupon code is required"})
+    
+    # Send the email
+    result = send_coupon_email(email, coupon_code, tier, rating, personalized_message)
+    return jsonify(result)
+
+@app.route('/check_email_config')
+def check_email_config():
+    """Check if email is configured"""
+    result = test_email_configuration()
+    return jsonify(result)
+
 @app.route('/test_workflow')
 def test_workflow():
     """Test the complete pizza agent workflow"""
@@ -530,7 +750,7 @@ def test_workflow():
 
 if __name__ == '__main__':
     print("🍕 Starting Pizza Agent Web Test Interface")
-    print("📱 Open your browser to: http://127.0.0.1:5000")
+    print("📱 Open your browser to: http://127.0.0.1:5003")
     print("🔧 This interface tests the pizza agent functionality directly")
     print()
-    app.run(debug=True, host='127.0.0.1', port=5000)
+    app.run(debug=True, host='127.0.0.1', port=5003)

@@ -9,6 +9,7 @@ A fun, interactive agent that distributes pizza coupons to conference attendees 
 - **🎯 Smart Story Evaluation**: AI rates stories for creativity, relevance, and engagement
 - **💬 Personalized Responses**: AI generates custom responses based on user stories
 - **🎭 Dynamic Prompts**: AI creates unique, engaging prompts for each interaction
+- **📧 Email Coupon Delivery**: Send beautifully formatted coupons via email
 - **🏆 Dynamic Coupon Tiers**: Better stories = better coupons (Basic/Standard/Premium)
 - **🛡️ Anti-Abuse Protection**: One coupon per user with AI-powered spam detection
 - **⚙️ Conference Integration**: Configurable for different events
@@ -290,6 +291,64 @@ flake8 agents.py functions.py config.py
 3. **Time Restrictions**: Optional conference-hours-only operation  
 4. **Coupon Format**: Cryptographic hashes prevent guessing
 5. **Session Management**: Proper state tracking prevents race conditions
+
+## 📧 Email Coupon Delivery
+
+The Pizza Agent now supports sending coupons via email with beautiful HTML templates!
+
+### Setup Email (Optional)
+
+1. **Add to .env file:**
+```bash
+EMAIL_ADDRESS=your_email@gmail.com
+EMAIL_PASSWORD=your_app_password_here
+EMAIL_FROM_NAME=CalHacks Pizza Agent
+SMTP_SERVER=smtp.gmail.com
+SMTP_PORT=587
+```
+
+2. **For Gmail (Recommended):**
+   - Enable 2-factor authentication
+   - Generate an App Password (not your regular password)
+   - Use the app password in `EMAIL_PASSWORD`
+
+3. **Test Configuration:**
+```bash
+python demo_email_feature.py
+```
+
+### Usage
+
+**Web Interface:**
+- Generate a coupon and enter your email
+- Click "Send via Email" 
+- Check inbox (and spam folder)
+
+**Chat Agent:**
+Users can request email delivery:
+```
+"Send email to john@example.com"
+"Email me the coupon at jane@university.edu"
+"Can you email it to my.email@domain.com?"
+```
+
+### Email Features
+
+- **Professional HTML design** with conference branding
+- **Mobile-responsive** templates
+- **Coupon code** prominently displayed
+- **Tier and rating information**
+- **Redemption instructions**
+- **Personalized AI message**
+
+### Fallback Behavior
+
+If email is not configured:
+- Agent works normally without email features
+- Web interface shows configuration status
+- No errors or functionality loss
+
+📖 **Full Documentation**: See `EMAIL_SETUP.md` for detailed setup instructions.
 
 ## 🐛 Troubleshooting
 

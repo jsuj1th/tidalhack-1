@@ -3,3 +3,5 @@ python-dotenv
 aiohttp
 requests
 google-generativeai
+flask
+smtplib

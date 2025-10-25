@@ -16,6 +16,8 @@ from config import USE_RANDOM_CODES, USE_AI_EVALUATION, USE_AI_RESPONSES, USE_AI
 from ai_functions import ai_evaluate_story, ai_generate_personalized_response, ai_detect_spam_or_abuse, ai_understand_user_intent, ai_generate_dynamic_prompts
 from gemini_functions import gemini_understand_intent, gemini_generate_unique_prompt, gemini_generate_response_message, gemini_evaluate_story
 from utils import PizzaAgentAnalytics
+from email_utils import send_coupon_email, validate_email
+from user_config import get_user_email, get_test_config
 from datetime import datetime, timezone
 from uuid import uuid4
 from typing import Any, Dict
@@ -191,10 +193,12 @@ async def process_coupon_generation(ctx: Context, sender: str, story: str, story
                     ctx.logger.info(f"Generated AI response for {sender}")
             except Exception as e:
                 ctx.logger.error(f"AI response generation failed: {e}")
-                response = generate_static_response(story_rating, coupon_code, coupon_tier)
+                user_email = extract_email_from_message(original_message if original_message else story)
+                response = generate_static_response(story_rating, coupon_code, coupon_tier, user_email)
         else:
             # Static response based on rating
-            response = generate_static_response(story_rating, coupon_code, coupon_tier)
+            user_email = extract_email_from_message(original_message if original_message else story)
+            response = generate_static_response(story_rating, coupon_code, coupon_tier, user_email)
         
         # Record analytics
         if analytics:
@@ -219,33 +223,43 @@ async def process_coupon_generation(ctx: Context, sender: str, story: str, story
             )
         )
 
-def generate_static_response(story_rating: int, coupon_code: str, coupon_tier: str) -> str:
+def generate_static_response(story_rating: int, coupon_code: str, coupon_tier: str, user_email: str = "") -> str:
     """Generate static response based on story rating (fallback)"""
     
+    # Base response based on rating
     if story_rating >= 8:
-        return (
-            f"🎉 WOW! That story was AMAZING! You've earned a PREMIUM coupon!\n\n"
+        base_response = (
+            f"� W OW! That story was AMAZING! You've earned a PREMIUM coupon!\n\n"
             f"**🎫 Your Coupon Code: {coupon_code}**\n\n"
             f"🍕 This gets you a LARGE pizza with premium toppings!\n"
             f"📱 Just show this code to any food vendor at the conference\n"
             f"⭐ Story Rating: {story_rating}/10 - Storytelling Master! 🏆"
         )
     elif story_rating >= 6:
-        return (
+        base_response = (
             f"😊 Great story! You've earned a solid coupon!\n\n"
-            f"**🎫 Your Coupon Code: {coupon_code}**\n\n"
+            f"**� Yo ur Coupon Code: {coupon_code}**\n\n"
             f"🍕 This gets you a MEDIUM pizza with your choice of toppings!\n"
             f"📱 Show this code to any food vendor at the conference\n"
             f"⭐ Story Rating: {story_rating}/10 - Well done! 👍"
         )
     else:
-        return (
-            f"🍕 Thanks for the story! Here's your coupon!\n\n"
+        base_response = (
+            f"� Thanks four the story! Here's your coupon!\n\n"
             f"**🎫 Your Coupon Code: {coupon_code}**\n\n"
             f"🍕 This gets you a tasty REGULAR pizza!\n"
             f"📱 Show this code to any food vendor at the conference\n"
             f"⭐ Story Rating: {story_rating}/10 - Every story deserves pizza! 🙂"
         )
+    
+    # Add email option if email is provided
+    if user_email and validate_email(user_email):
+        base_response += (
+            f"\n\n📧 **Email Option Available!**\n"
+            f"Want this coupon sent to {user_email}? Just reply with 'send email' and I'll deliver it to your inbox! 📬"
+        )
+    
+    return base_response
 
 async def process_user_message(ctx: Context, sender: str, message: str):
     """Process user message based on conversation state"""
@@ -265,11 +279,64 @@ async def process_user_message(ctx: Context, sender: str, message: str):
     # Check if user already has a coupon
     if has_user_received_coupon(ctx, sender):
         existing_coupon = get_user_coupon(ctx, sender)
+        
+        # Check if user is requesting email delivery
+        if any(phrase in message_lower for phrase in ["send email", "email me", "via email", "by email", "email it"]):
+            user_email = extract_email_from_message(message)
+            if user_email and validate_email(user_email):
+                # Try to send email
+                try:
+                    # Get stored coupon details (we'd need to store these)
+                    email_result = send_coupon_email(
+                        user_email, 
+                        existing_coupon, 
+                        "STANDARD",  # Default tier since we don't store it
+                        7,  # Default rating
+                        f"Here's your CalHacks pizza coupon: {existing_coupon}"
+                    )
+                    
+                    if email_result["success"]:
+                        await ctx.send(
+                            sender,
+                            create_text_chat(
+                                f"📧 Perfect! I've sent your coupon **{existing_coupon}** to {user_email}!\n\n"
+                                f"Check your inbox (and spam folder) for a beautifully formatted email with all the details! 🎉"
+                            )
+                        )
+                    else:
+                        await ctx.send(
+                            sender,
+                            create_text_chat(
+                                f"❌ Sorry, I couldn't send the email: {email_result['message']}\n\n"
+                                f"But here's your coupon again: **{existing_coupon}** 📱"
+                            )
+                        )
+                except Exception as e:
+                    await ctx.send(
+                        sender,
+                        create_text_chat(
+                            f"❌ Email service is currently unavailable.\n\n"
+                            f"But here's your coupon: **{existing_coupon}** 📱"
+                        )
+                    )
+                return
+            else:
+                await ctx.send(
+                    sender,
+                    create_text_chat(
+                        f"📧 I'd love to email your coupon, but I need a valid email address!\n\n"
+                        f"Please include your email like: 'send email to john@example.com'\n\n"
+                        f"Or just use your coupon: **{existing_coupon}** 📱"
+                    )
+                )
+                return
+        
         await ctx.send(
             sender,
             create_text_chat(
                 f"🍕 Hey there! You already got your pizza coupon: **{existing_coupon}**\n\n"
                 f"Just show this code to any participating food vendor at the conference! 📱\n"
+                f"💡 Want it emailed? Just say 'send email to your@email.com'!\n"
                 f"One delicious pizza per person - enjoy your slice! 🎉"
             )
         )
