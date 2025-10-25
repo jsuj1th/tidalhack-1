@@ -4,3 +4,4 @@ aiohttp
 requests
 google-generativeai
 flask
+smtplib

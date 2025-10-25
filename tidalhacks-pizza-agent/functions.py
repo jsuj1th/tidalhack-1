@@ -167,7 +167,43 @@ def extract_coupon_info(coupon_code: str) -> dict:
         "description": get_coupon_description(tier)
     }
 
+# Analytics and reporting functions
+def get_coupon_stats() -> dict:
+    """Return coupon generation statistics (for admin use)"""
+    # In a real implementation, this would query a database
+    # For now, return placeholder data
+    return {
+        "total_issued": 0,
+        "by_tier": {"PREMIUM": 0, "STANDARD": 0, "BASIC": 0},
+        "by_hour": {},
+        "redemption_rate": 0.0
+    }
+
+def is_business_hours() -> bool:
+    """Check if it's during conference hours (optional restriction)"""
+    current_hour = datetime.now().hour
+    # Conference runs 9 AM to 6 PM
+    return 9 <= current_hour <= 18
+
+# Example usage and testing functions
+def test_coupon_generation():
+    """Test function to verify coupon generation works"""
+    test_users = ["user1", "user2@example.com", "wallet0x123"]
+    test_ratings = [3, 7, 9]
+    
+    print("Testing coupon generation:")
+    for user in test_users:
+        for rating in test_ratings:
+            code, tier = generate_coupon_code(user, rating)
+            info = extract_coupon_info(code)
+            print(f"User: {user[:10]}, Rating: {rating}, Code: {code}, Tier: {tier}")
+            print(f"  Valid: {info['valid']}, Size: {info.get('pizza_size', 'N/A')}")
+            print()
+
 if __name__ == "__main__":
+    # Run tests when script is executed directly
+    test_coupon_generation()
+    
     # Test story evaluation
     test_stories = [
         "pizza",

@@ -1,0 +1,23 @@
+# AWS-powered Pizza Agent Requirements
+
+# Core agent framework
+uagents
+python-dotenv
+
+# AWS SDK
+boto3
+botocore
+
+# Web framework (for public endpoint)
+flask
+flask-cors
+
+# Additional utilities
+requests
+aiohttp
+
+# Optional: For QR code generation
+qrcode[pil]
+
+# Optional: For image processing
+Pillow

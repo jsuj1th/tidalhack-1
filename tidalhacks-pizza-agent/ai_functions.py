@@ -306,44 +306,44 @@ async def ai_generate_dynamic_prompts() -> str:
     ]
     return random.choice(fallback_prompts)
 
+# Testing functions
+async def test_ai_functions():
+    """Test Gemini AI functions"""
+    
+    print("🧪 Testing Gemini AI Functions")
+    print("=" * 40)
+    
+    # Test story evaluation
+    test_story = "I once ate pizza in Italy and it changed my life! The cheese was perfect and the crust was like heaven. I'll never forget that moment."
+    
+    print(f"\n📖 Test Story: '{test_story}'")
+    
+    # Test story evaluation
+    print("\n⭐ Test Story Evaluation:")
+    rating, explanation = await ai_evaluate_story(test_story)
+    print(f"Rating: {rating}/10")
+    print(f"Explanation: {explanation}")
+    
+    # Test personalized response
+    print("\n💬 Test Personalized Response:")
+    response = await ai_generate_personalized_response(test_story, rating, "STANDARD", "TEST-123")
+    print(f"Response: {response}")
+    
+    # Test intent understanding
+    print("\n🎯 Test Intent Understanding:")
+    intent = await ai_understand_user_intent("I want pizza!")
+    print(f"Intent: {intent}")
+    
+    # Test dynamic prompts
+    print("\n✨ Test Dynamic Prompt Generation:")
+    prompt = await ai_generate_dynamic_prompts()
+    print(f"Prompt: {prompt[:100]}...")
+    
+    # Test spam detection
+    print("\n🛡️ Test Spam Detection:")
+    is_spam, reason = await ai_detect_spam_or_abuse("This is a genuine pizza story!")
+    print(f"Is Spam: {is_spam}, Reason: {reason}")
+
 if __name__ == "__main__":
     import asyncio
-    
-    async def test_ai_functions():
-        """Test AI functions"""
-        
-        print("🧪 Testing AI Functions")
-        print("=" * 40)
-        
-        # Test story evaluation
-        test_story = "I once ate pizza in Italy and it changed my life! The cheese was perfect and the crust was like heaven. I'll never forget that moment."
-        
-        print(f"\n📖 Test Story: '{test_story}'")
-        
-        # Test story evaluation
-        print("\n⭐ Test Story Evaluation:")
-        rating, explanation = await ai_evaluate_story(test_story)
-        print(f"Rating: {rating}/10")
-        print(f"Explanation: {explanation}")
-        
-        # Test personalized response
-        print("\n💬 Test Personalized Response:")
-        response = await ai_generate_personalized_response(test_story, rating, "STANDARD", "TEST-123")
-        print(f"Response: {response}")
-        
-        # Test intent understanding
-        print("\n🎯 Test Intent Understanding:")
-        intent = await ai_understand_user_intent("I want pizza!")
-        print(f"Intent: {intent}")
-        
-        # Test dynamic prompts
-        print("\n✨ Test Dynamic Prompt Generation:")
-        prompt = await ai_generate_dynamic_prompts()
-        print(f"Prompt: {prompt[:100]}...")
-        
-        # Test spam detection
-        print("\n🛡️ Test Spam Detection:")
-        is_spam, reason = await ai_detect_spam_or_abuse("This is a genuine pizza story!")
-        print(f"Is Spam: {is_spam}, Reason: {reason}")
-    
     asyncio.run(test_ai_functions())

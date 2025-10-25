@@ -64,7 +64,7 @@ REDEMPTION_WEBHOOK_URL = None  # Webhook to call when coupon is redeemed
 LOG_LEVEL = "INFO"
 LOG_USER_STORIES = False  # Set to True to log stories for analysis (privacy consideration)
 ENABLE_ANALYTICS = True
-ANALYTICS_FILE = "pizza_agent_analytics.json"
+ANALYTICS_FILE = "tidalhacks_pizza_analytics.json"
 
 # AI Feature Flags
 USE_RANDOM_CODES = True  # Use random codes for truly unique coupons every time
@@ -131,6 +131,7 @@ def get_conference_status() -> str:
     else:
         return "Conference is active"
 
+# Validation
 if __name__ == "__main__":
     print(f"Configuration for {CONFERENCE_NAME}")
     print(f"Conference ID: {CONFERENCE_ID}")

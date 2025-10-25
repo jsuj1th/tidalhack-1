@@ -382,35 +382,36 @@ def get_fallback_prompts() -> list:
     ]
 
 
+# Test function
+async def test_gemini_functions():
+    """Test Gemini integration"""
+    
+    print("🧪 Testing Gemini Functions")
+    print("=" * 40)
+    
+    # Test 1: Intent detection
+    test_message = "I want pizza at TidalHACKS25"
+    print(f"\n📝 Test Intent: '{test_message}'")
+    intent = await gemini_understand_intent(test_message)
+    print(f"Result: {intent}")
+    
+    # Test 2: Unique prompt generation
+    print("\n✨ Test Unique Prompt Generation:")
+    prompt1 = await gemini_generate_unique_prompt()
+    print(f"Prompt 1: {prompt1[:100]}...")
+    
+    # Test 3: Response generation
+    print("\n💬 Test Response Generation:")
+    test_story = "Last night I coded until 3am and ordered pizza. It saved my hackathon project!"
+    response = await gemini_generate_response_message(test_story, 7, "STANDARD", "TEST-123")
+    print(f"Response: {response}")
+    
+    # Test 4: Story evaluation
+    print("\n⭐ Test Story Evaluation:")
+    rating, explanation = await gemini_evaluate_story(test_story)
+    print(f"Rating: {rating}/10, Explanation: {explanation}")
+
+
 if __name__ == "__main__":
     import asyncio
-    
-    async def test_gemini_functions():
-        """Test Gemini integration"""
-        
-        print("🧪 Testing Gemini Functions")
-        print("=" * 40)
-        
-        # Test 1: Intent detection
-        test_message = "I want pizza at TidalHACKS25"
-        print(f"\n📝 Test Intent: '{test_message}'")
-        intent = await gemini_understand_intent(test_message)
-        print(f"Result: {intent}")
-        
-        # Test 2: Unique prompt generation
-        print("\n✨ Test Unique Prompt Generation:")
-        prompt1 = await gemini_generate_unique_prompt()
-        print(f"Prompt 1: {prompt1[:100]}...")
-        
-        # Test 3: Response generation
-        print("\n💬 Test Response Generation:")
-        test_story = "Last night I coded until 3am and ordered pizza. It saved my hackathon project!"
-        response = await gemini_generate_response_message(test_story, 7, "STANDARD", "TEST-123")
-        print(f"Response: {response}")
-        
-        # Test 4: Story evaluation
-        print("\n⭐ Test Story Evaluation:")
-        rating, explanation = await gemini_evaluate_story(test_story)
-        print(f"Rating: {rating}/10, Explanation: {explanation}")
-    
     asyncio.run(test_gemini_functions())

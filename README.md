@@ -1,6 +1,6 @@
-# 🚀 Hackathon Feedback Collection System
+# 🚀 TidalHACKS25 Pizza Agent System
 
-A production-ready AI-powered system for collecting and analyzing participant feedback at hackathons. Built with uAgents framework and designed for AWS deployment.
+A production-ready AI-powered pizza coupon distribution system for TidalHACKS25 participants. Built with uAgents framework and Google Gemini AI integration.
 
 ## 🌟 Features
 
