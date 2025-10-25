@@ -259,23 +259,23 @@ async def ai_understand_user_intent(message: str) -> Dict[str, any]:
 
 async def ai_generate_dynamic_prompts() -> str:
     """
-    Generate variety in story prompts using Gemini AI for CalHacks
+    Generate variety in story prompts using Gemini AI for TamuHacks
     """
     
     if not gemini_model:
-        # Fallback with CalHacks theme
+        # Fallback with TamuHacks theme
         import random
         fallback_prompts = [
-            "🍕 Hey CalHacks hacker! Welcome to Fetch.ai's Pizza Paradise! ✨\n\nYou're crushing code, building amazing projects, and bringing innovation from universities across the country - you definitely deserve pizza! 🎓\n\nBut first, I need to hear your most epic pizza story! Tell me about:\n• Your craziest late-night coding pizza session\n• Your dream hackathon fuel (aka pizza combo)\n• A time pizza saved your project\n• Or any pizza-related tale!\n\nThe more creative and fun your story, the better your coupon! Fetch.ai is here to fuel your innovation! 🎭🚀",
-            "🍕 Greetings, CalHacks innovator! I'm the Pizza Genie! 🧞‍♂️\n\nFetch.ai sees you grinding away at this hackathon, bringing brilliant ideas from campuses nationwide! You've earned a pizza break! 🎓✨\n\nTo unlock your pizza treasures, complete the ancient ritual of... STORYTELLING! 📚\n\nShare your most legendary pizza tale:\n• The weirdest topping combo during an all-nighter\n• Your best pizza-fueled hackathon memory\n• Why hackers like you deserve free pizza\n• A pizza moment that kept you going\n\nMake it interesting - boring stories get basic coupons! 😉🚀",
-            "🍕 Pizza patrol reporting for CalHacks duty! 🚔\n\nFetch.ai has detected elevated hunger levels among brilliant hackers from universities across the nation! You're building the future - time to fuel up! 🎓⚡\n\nBefore I issue your emergency pizza coupon, I need your pizza credentials:\n\nTell me a story about:\n• How pizza powers your coding sessions\n• The most memorable hackathon pizza moment\n• A pizza story worth sharing with fellow hackers\n• Why pizza makes innovation possible\n\nThe CalHacks Pizza Council (powered by Fetch.ai) will review your application! 📋✨🚀"
+            "🍕 Hey TamuHacks hacker! Welcome to Fetch.ai's Pizza Paradise! ✨\n\nYou're crushing code, building amazing projects, and bringing innovation from universities across the country - you definitely deserve pizza! 🎓\n\nBut first, I need to hear your most epic pizza story! Tell me about:\n• Your craziest late-night coding pizza session\n• Your dream hackathon fuel (aka pizza combo)\n• A time pizza saved your project\n• Or any pizza-related tale!\n\nThe more creative and fun your story, the better your coupon! Fetch.ai is here to fuel your innovation! 🎭🚀",
+            "🍕 Greetings, TamuHacks innovator! I'm the Pizza Genie! 🧞‍♂️\n\nFetch.ai sees you grinding away at this hackathon, bringing brilliant ideas from campuses nationwide! You've earned a pizza break! 🎓✨\n\nTo unlock your pizza treasures, complete the ancient ritual of... STORYTELLING! 📚\n\nShare your most legendary pizza tale:\n• The weirdest topping combo during an all-nighter\n• Your best pizza-fueled hackathon memory\n• Why hackers like you deserve free pizza\n• A pizza moment that kept you going\n\nMake it interesting - boring stories get basic coupons! 😉🚀",
+            "🍕 Pizza patrol reporting for TamuHacks duty! 🚔\n\nFetch.ai has detected elevated hunger levels among brilliant hackers from universities across the nation! You're building the future - time to fuel up! 🎓⚡\n\nBefore I issue your emergency pizza coupon, I need your pizza credentials:\n\nTell me a story about:\n• How pizza powers your coding sessions\n• The most memorable hackathon pizza moment\n• A pizza story worth sharing with fellow hackers\n• Why pizza makes innovation possible\n\nThe TamuHacks Pizza Council (powered by Fetch.ai) will review your application! 📋✨🚀"
         ]
         return random.choice(fallback_prompts)
     
     prompt = """
-    Generate a fun, engaging prompt asking CalHacks hackers to share a pizza story for a coupon.
+    Generate a fun, engaging prompt asking TamuHacks hackers to share a pizza story for a coupon.
     
-    Context: This is for CalHacks hackathon, where university students from across the country are building 
+    Context: This is for TamuHacks hackathon, where university students from across the country are building 
     amazing projects. Fetch.ai is the main sponsor/co-host providing pizza.
     
     Make it creative and different from typical prompts. Include:
@@ -297,12 +297,12 @@ async def ai_generate_dynamic_prompts() -> str:
     except Exception as e:
         print(f"Gemini prompt generation error: {e}")
     
-    # Fallback with CalHacks theme
+    # Fallback with TamuHacks theme
     import random
     fallback_prompts = [
-        "🍕 Hey CalHacks hacker! Welcome to Fetch.ai's Pizza Paradise! ✨\n\nYou're crushing code, building amazing projects, and bringing innovation from universities across the country - you definitely deserve pizza! 🎓\n\nBut first, I need to hear your most epic pizza story! Tell me about:\n• Your craziest late-night coding pizza session\n• Your dream hackathon fuel (aka pizza combo)\n• A time pizza saved your project\n• Or any pizza-related tale!\n\nThe more creative and fun your story, the better your coupon! Fetch.ai is here to fuel your innovation! 🎭🚀",
-        "🍕 Greetings, CalHacks innovator! I'm the Pizza Genie! 🧞‍♂️\n\nFetch.ai sees you grinding away at this hackathon, bringing brilliant ideas from campuses nationwide! You've earned a pizza break! 🎓✨\n\nTo unlock your pizza treasures, complete the ancient ritual of... STORYTELLING! 📚\n\nShare your most legendary pizza tale:\n• The weirdest topping combo during an all-nighter\n• Your best pizza-fueled hackathon memory\n• Why hackers like you deserve free pizza\n• A pizza moment that kept you going\n\nMake it interesting - boring stories get basic coupons! 😉🚀",
-        "🍕 Pizza patrol reporting for CalHacks duty! 🚔\n\nFetch.ai has detected elevated hunger levels among brilliant hackers from universities across the nation! You're building the future - time to fuel up! 🎓⚡\n\nBefore I issue your emergency pizza coupon, I need your pizza credentials:\n\nTell me a story about:\n• How pizza powers your coding sessions\n• The most memorable hackathon pizza moment\n• A pizza story worth sharing with fellow hackers\n• Why pizza makes innovation possible\n\nThe CalHacks Pizza Council (powered by Fetch.ai) will review your application! 📋✨🚀"
+        "🍕 Hey TamuHacks hacker! Welcome to Fetch.ai's Pizza Paradise! ✨\n\nYou're crushing code, building amazing projects, and bringing innovation from universities across the country - you definitely deserve pizza! 🎓\n\nBut first, I need to hear your most epic pizza story! Tell me about:\n• Your craziest late-night coding pizza session\n• Your dream hackathon fuel (aka pizza combo)\n• A time pizza saved your project\n• Or any pizza-related tale!\n\nThe more creative and fun your story, the better your coupon! Fetch.ai is here to fuel your innovation! 🎭🚀",
+        "🍕 Greetings, TamuHacks innovator! I'm the Pizza Genie! 🧞‍♂️\n\nFetch.ai sees you grinding away at this hackathon, bringing brilliant ideas from campuses nationwide! You've earned a pizza break! 🎓✨\n\nTo unlock your pizza treasures, complete the ancient ritual of... STORYTELLING! 📚\n\nShare your most legendary pizza tale:\n• The weirdest topping combo during an all-nighter\n• Your best pizza-fueled hackathon memory\n• Why hackers like you deserve free pizza\n• A pizza moment that kept you going\n\nMake it interesting - boring stories get basic coupons! 😉🚀",
+        "🍕 Pizza patrol reporting for TamuHacks duty! 🚔\n\nFetch.ai has detected elevated hunger levels among brilliant hackers from universities across the nation! You're building the future - time to fuel up! 🎓⚡\n\nBefore I issue your emergency pizza coupon, I need your pizza credentials:\n\nTell me a story about:\n• How pizza powers your coding sessions\n• The most memorable hackathon pizza moment\n• A pizza story worth sharing with fellow hackers\n• Why pizza makes innovation possible\n\nThe TamuHacks Pizza Council (powered by Fetch.ai) will review your application! 📋✨🚀"
     ]
     return random.choice(fallback_prompts)
 

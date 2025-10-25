@@ -20,7 +20,7 @@ Add these to your `.env` file:
 # Email Configuration (Optional)
 EMAIL_ADDRESS=your_email@gmail.com
 EMAIL_PASSWORD=your_app_password_here
-EMAIL_FROM_NAME=CalHacks Pizza Agent
+EMAIL_FROM_NAME=TamuHacks Pizza Agent
 SMTP_SERVER=smtp.gmail.com
 SMTP_PORT=587
 ```
@@ -71,7 +71,7 @@ Users can request email delivery by:
 ## 📧 Email Template Features
 
 The email includes:
-- **Professional HTML design** with CalHacks branding
+- **Professional HTML design** with TamuHacks branding
 - **Coupon code** prominently displayed
 - **Tier information** (Premium/Standard/Basic)
 - **Story rating** that earned the coupon

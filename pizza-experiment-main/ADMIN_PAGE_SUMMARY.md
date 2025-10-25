@@ -157,7 +157,7 @@ python test_admin_page.py
 - ✅ Complete documentation
 - ✅ Thorough testing
 
-**Ready for Production Use at CalHacks or Similar Events!**
+**Ready for Production Use at TamuHacks or Similar Events!**
 
 ---
 

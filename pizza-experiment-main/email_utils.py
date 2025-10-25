@@ -21,7 +21,7 @@ SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.gmail.com")
 SMTP_PORT = int(os.getenv("SMTP_PORT", "587"))
 EMAIL_ADDRESS = os.getenv("EMAIL_ADDRESS", "")
 EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD", "")
-EMAIL_FROM_NAME = os.getenv("EMAIL_FROM_NAME", "CalHacks Pizza Agent")
+EMAIL_FROM_NAME = os.getenv("EMAIL_FROM_NAME", "TamuHacks Pizza Agent")
 
 def validate_email(email: str) -> bool:
     """Validate email format"""
@@ -32,7 +32,7 @@ def create_coupon_email(recipient_email: str, coupon_code: str, tier: str, story
     """Create a formatted email with the pizza coupon"""
     
     msg = MIMEMultipart("alternative")
-    msg["Subject"] = f"🍕 Your CalHacks Pizza Coupon: {coupon_code}"
+    msg["Subject"] = f"🍕 Your TamuHacks Pizza Coupon: {coupon_code}"
     msg["From"] = f"{EMAIL_FROM_NAME} <{EMAIL_ADDRESS}>"
     msg["To"] = recipient_email
     
@@ -119,7 +119,7 @@ def create_coupon_email(recipient_email: str, coupon_code: str, tier: str, story
     <body>
         <div class="container">
             <div class="header">
-                <h1><span class="emoji">🍕</span> Your CalHacks Pizza Coupon! <span class="emoji">🎉</span></h1>
+                <h1><span class="emoji">🍕</span> Your TamuHacks Pizza Coupon! <span class="emoji">🎉</span></h1>
             </div>
             
             <div class="content">
@@ -135,7 +135,7 @@ def create_coupon_email(recipient_email: str, coupon_code: str, tier: str, story
                 <div class="instructions">
                     <h3 style="margin-top: 0; color: #2196F3;"><span class="emoji">📱</span> How to Redeem</h3>
                     <ol>
-                        <li>Find any participating food vendor at CalHacks 12.0</li>
+                        <li>Find any participating food vendor at TamuHacks 12.0</li>
                         <li>Show them this coupon code: <span class="highlight">{coupon_code}</span></li>
                         <li>Enjoy your delicious {tier.lower()} pizza! <span class="emoji">🍕</span></li>
                     </ol>
@@ -154,7 +154,7 @@ def create_coupon_email(recipient_email: str, coupon_code: str, tier: str, story
             </div>
             
             <div class="footer">
-                <p>CalHacks 12.0 Pizza Agent | Sponsored by Fetch.ai</p>
+                <p>TamuHacks 12.0 Pizza Agent | Sponsored by Fetch.ai</p>
                 <p>Questions? Find us at the Fetch.ai booth!</p>
             </div>
         </div>
@@ -164,7 +164,7 @@ def create_coupon_email(recipient_email: str, coupon_code: str, tier: str, story
     
     # Create plain text version
     text_content = f"""
-🍕 Your CalHacks Pizza Coupon! 🎉
+🍕 Your TamuHacks Pizza Coupon! 🎉
 
 Your Coupon Code: {coupon_code}
 Tier: {tier}
@@ -173,7 +173,7 @@ Story Rating: {story_rating}/10
 {personalized_message if personalized_message else ''}
 
 How to Redeem:
-1. Find any participating food vendor at CalHacks 12.0
+1. Find any participating food vendor at TamuHacks 12.0
 2. Show them this coupon code: {coupon_code}
 3. Enjoy your delicious pizza! 🍕
 
@@ -184,7 +184,7 @@ What you get:
 
 🚀 Powered by Fetch.ai - Fueling innovation, one pizza at a time! 🚀
 
-CalHacks 12.0 Pizza Agent | Sponsored by Fetch.ai
+TamuHacks 12.0 Pizza Agent | Sponsored by Fetch.ai
 Questions? Find us at the Fetch.ai booth!
     """
     

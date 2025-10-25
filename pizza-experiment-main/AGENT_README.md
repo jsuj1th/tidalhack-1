@@ -1,5 +1,5 @@
 ![tag:innovationlab](https://img.shields.io/badge/innovationlab-3D8BD3)
-![tag:calhacks](https://img.shields.io/badge/calhacks-FF6B35)
+![tag:TamuHacks](https://img.shields.io/badge/TamuHacks-FF6B35)
 ![tag:food](https://img.shields.io/badge/food-4CAF50)
 ![tag:rewards](https://img.shields.io/badge/Coupon-FFD700)
 ![tag:Pizza](https://img.shields.io/badge/Pizza-E91E63)
@@ -7,7 +7,7 @@
 
 # 🍕 Pizza Coupon Agent
 
-Your friendly pizza fairy at CalHacks 12.0! Share your most creative pizza story and get a code to fetch a delicious pizza at the event. The better your story, the better your pizza coupon! Powered by AI to evaluate your pizza tales and reward your creativity with tasty prizes.
+Your friendly pizza fairy at TamuHacks 12.0! Share your most creative pizza story and get a code to fetch a delicious pizza at the event. The better your story, the better your pizza coupon! Powered by AI to evaluate your pizza tales and reward your creativity with tasty prizes.
 
 ## What I Can Do
 
@@ -26,11 +26,11 @@ Your friendly pizza fairy at CalHacks 12.0! Share your most creative pizza story
 
 ## How It Works
 
-1. **Say Hello**: Start by asking for pizza - "I want pizza at CalHacks 12.0!" or "Give me a pizza coupon!"
+1. **Say Hello**: Start by asking for pizza - "I want pizza at TamuHacks 12.0!" or "Give me a pizza coupon!"
 2. **Get Inspired**: I'll give you a fun, creative prompt to inspire your pizza story (unique every time!)
 3. **Share Your Tale**: Tell me about your best pizza moment, craziest topping combo, or why you deserve free pizza
 4. **Get Rewarded**: Receive your unique coupon code based on your story's awesomeness
-5. **Claim Your Pizza**: Show your code at the CalHacks 12.0 food booth and enjoy!
+5. **Claim Your Pizza**: Show your code at the TamuHacks 12.0 food booth and enjoy!
 
 ## Example Stories & Rewards
 
@@ -60,7 +60,7 @@ and how it became more than just food. You really painted a picture!
 
 **🎫 Your Coupon Code: PIZZA-CH2025-PREMIUM-A8F3D2-0815**
 
-🍕 This gets you a LARGE pizza with PREMIUM toppings at CalHacks!
+🍕 This gets you a LARGE pizza with PREMIUM toppings at TamuHacks!
 📱 Show this code to the food vendor
 ⭐ Story Rating: 9/10 - Your storytelling is chef's kiss! 👨‍🍳✨
 
@@ -89,7 +89,7 @@ became casualties of war, your story definitely earned you a fresh one!
 
 **🎫 Your Coupon Code: PIZZA-CH2025-STANDARD-59D8EB-1303**
 
-🍕 This gets you a MEDIUM pizza with classic toppings at CalHacks!
+🍕 This gets you a MEDIUM pizza with classic toppings at TamuHacks!
 📱 Show this code to the food vendor
 ⭐ Story Rating: 6/10 - Solid pizza drama with emotional stakes! 🎭
 
@@ -114,7 +114,7 @@ that's what matters!
 
 **🎫 Your Coupon Code: PIZZA-CH2025-BASIC-F2A91C-0942**
 
-🍕 This gets you a tasty PERSONAL pizza at CalHacks!
+🍕 This gets you a tasty PERSONAL pizza at TamuHacks!
 📱 Show this code to the food vendor
 ⭐ Story Rating: 4/10 - Every story deserves pizza! 🙂
 
@@ -165,7 +165,7 @@ The more creative and fun your story, the better your coupon might be! 🎭
 
 📊 **Smart Analytics**: Tracks pizza distribution, story quality trends, and user engagement
 
-🎯 **Built for CalHacks**: Specifically designed to make your hackathon experience more delicious!
+🎯 **Built for TamuHacks**: Specifically designed to make your hackathon experience more delicious!
 
 ## Technical Features
 
@@ -178,6 +178,6 @@ The more creative and fun your story, the better your coupon might be! 🎭
 
 ---
 
-🍕 **Ready to get your pizza?** Just say hi and let's start your pizza journey! Made with ❤️ for CalHacks 12.0.
+🍕 **Ready to get your pizza?** Just say hi and let's start your pizza journey! Made with ❤️ for TamuHacks 12.0.
 
-*Note: One coupon per person. Show your unique code at the CalHacks 12.0 food booth to claim your pizza! Powered by Fetch.ai + OpenAI.*
+*Note: One coupon per person. Show your unique code at the TamuHacks 12.0 food booth to claim your pizza! Powered by Fetch.ai + OpenAI.*

@@ -64,7 +64,7 @@ async def gemini_understand_intent(message: str, retry_count: int = None) -> Dic
         return {"intent": "unknown", "wants_coupon": False, "topic": "unclear", "confidence": 0.0}
     
     prompt = f"""
-    Analyze this message from a CalHacks 12.0 hackathon participant and determine their intent.
+    Analyze this message from a TamuHacks 12.0 hackathon participant and determine their intent.
     
     Message: "{message}"
     
@@ -118,7 +118,7 @@ async def gemini_understand_intent(message: str, retry_count: int = None) -> Dic
 
 async def gemini_generate_unique_prompt(retry_count: int = None) -> str:
     """
-    Generate a unique, creative prompt using Gemini for CalHacks 12.0 with fallback
+    Generate a unique, creative prompt using Gemini for TamuHacks 12.0 with fallback
     """
     
     if retry_count is None:
@@ -138,17 +138,17 @@ async def gemini_generate_unique_prompt(retry_count: int = None) -> str:
         return random.choice(fallback_prompts)
     
     prompt = """
-    Create ONE single, fun, and engaging prompt asking a CalHacks 12.0 hacker to share their pizza story.
+    Create ONE single, fun, and engaging prompt asking a TamuHacks 12.0 hacker to share their pizza story.
     
     Context:
-    - CalHacks 12.0 is a hackathon with university students from across the country
+    - TamuHacks 12.0 is a hackathon with university students from across the country
     - Fetch.ai is sponsoring and providing pizza coupons
     - Better stories get better pizza coupons (PREMIUM, STANDARD, or BASIC)
     
     Requirements:
     - Choose ONE fun hacker-themed personality (Pizza Wizard, Code Sorcerer, Debug Detective, Pizza.js Bot, etc.)
     - Use coding/programming language naturally (pizza.execute(), git commit, merge conflict, debugging, stack, deploy, etc.)
-    - Acknowledge they're brilliant hackers grinding at CalHacks 12.0
+    - Acknowledge they're brilliant hackers grinding at TamuHacks 12.0
     - Mention Fetch.ai naturally as the pizza provider
     - CLEARLY state: "Tell me YOUR pizza story" or "Share YOUR pizza tale" at the start
     - Include 3-4 example prompts as BULLET POINTS (not separate questions) like:
@@ -217,7 +217,7 @@ async def gemini_generate_response_message(story: str, rating: int, tier: str, c
     }
     
     prompt = f"""
-    Generate a fun, personalized response to this pizza story from a CalHacks 12.0 hacker.
+    Generate a fun, personalized response to this pizza story from a TamuHacks 12.0 hacker.
     
     Story: "{story}"
     Rating: {rating}/10
@@ -230,7 +230,7 @@ async def gemini_generate_response_message(story: str, rating: int, tier: str, c
     2. Shows enthusiasm appropriate to their rating (more excited for higher ratings)
     3. Clearly presents their coupon code in bold: **{coupon_code}**
     4. Explains what pizza they get
-    5. Mentions they can show it at the CalHacks 12.0 food booth
+    5. Mentions they can show it at the TamuHacks 12.0 food booth
     6. Uses emojis and keeps it fun
     7. Keep it 3-4 sentences
     
@@ -349,7 +349,7 @@ def generate_static_response(rating: int, coupon_code: str, tier: str) -> str:
         return (
             f"🎉 WOW! That's an absolutely INCREDIBLE pizza story! \n\n"
             f"**🎫 Your Coupon Code: {coupon_code}**\n\n"
-            f"🍕 This gets you a LARGE pizza with PREMIUM toppings at CalHacks 12.0!\n"
+            f"🍕 This gets you a LARGE pizza with PREMIUM toppings at TamuHacks 12.0!\n"
             f"📱 Show this code at the Fetch.ai food booth\n"
             f"⭐ Story Rating: {rating}/10 - Your storytelling is chef's kiss! 👨‍🍳✨"
         )
@@ -357,7 +357,7 @@ def generate_static_response(rating: int, coupon_code: str, tier: str) -> str:
         return (
             f"😊 Great pizza story! I love the details!\n\n"
             f"**🎫 Your Coupon Code: {coupon_code}**\n\n"
-            f"🍕 This gets you a MEDIUM pizza with classic toppings at CalHacks 12.0!\n"
+            f"🍕 This gets you a MEDIUM pizza with classic toppings at TamuHacks 12.0!\n"
             f"📱 Show this code at the Fetch.ai food booth\n"
             f"⭐ Story Rating: {rating}/10 - Solid storytelling! 👍"
         )
@@ -365,20 +365,20 @@ def generate_static_response(rating: int, coupon_code: str, tier: str) -> str:
         return (
             f"🍕 Thanks for the story! Here's your coupon!\n\n"
             f"**🎫 Your Coupon Code: {coupon_code}**\n\n"
-            f"🍕 This gets you a tasty PERSONAL pizza at CalHacks 12.0!\n"
+            f"🍕 This gets you a tasty PERSONAL pizza at TamuHacks 12.0!\n"
             f"📱 Show this code at the Fetch.ai food booth\n"
             f"⭐ Story Rating: {rating}/10 - Every story deserves pizza! 🙂"
         )
 
 
 def get_fallback_prompts() -> list:
-    """Static fallback prompts for CalHacks 12.0"""
+    """Static fallback prompts for TamuHacks 12.0"""
     return [
-        "🍕💻 Hey CalHacks 12.0 hacker! Your code is compiling, time for a pizza break! ✨\n\nYou're out here building the future, and Fetch.ai wants to fuel your late-night debugging sessions with pizza! 🎓\n\n**Tell me YOUR pizza story!** Maybe it was:\n• That legendary 3am pizza that powered your breakthrough\n• A pizza moment that saved your hackathon project\n• An epic slice during your most intense debugging session\n• Or any other pizza tale from your coding adventures!\n\n🏆 Pro tip: Epic stories unlock bigger pizzas! Everyone gets rewarded! Let's see what pizza.execute() returns! 🚀",
+        "🍕💻 Hey TamuHacks 12.0 hacker! Your code is compiling, time for a pizza break! ✨\n\nYou're out here building the future, and Fetch.ai wants to fuel your late-night debugging sessions with pizza! 🎓\n\n**Tell me YOUR pizza story!** Maybe it was:\n• That legendary 3am pizza that powered your breakthrough\n• A pizza moment that saved your hackathon project\n• An epic slice during your most intense debugging session\n• Or any other pizza tale from your coding adventures!\n\n🏆 Pro tip: Epic stories unlock bigger pizzas! Everyone gets rewarded! Let's see what pizza.execute() returns! 🚀",
         
-        "🧙‍♂️🍕 Greetings, CalHacks 12.0 code wizard! The Pizza Genie has materialized! ✨\n\nYou're casting powerful algorithms and debugging spells - Fetch.ai sees your hustle and wants to reward your magic with pizza! 💻⚡\n\n**Share YOUR greatest pizza tale!** For example:\n• Maybe it was that weird topping combo that powered an all-nighter\n• Or your most epic pizza-fueled breakthrough moment\n• Perhaps when pizza literally saved your merge conflict\n• Any perfect slice during your hackathon grind!\n\n⭐ Remember: Legendary stories earn PREMIUM pizzas, good ones get STANDARD, all stories get rewarded! Cast your best spell and unlock your pizza.reward()! 🎁",
+        "🧙‍♂️🍕 Greetings, TamuHacks 12.0 code wizard! The Pizza Genie has materialized! ✨\n\nYou're casting powerful algorithms and debugging spells - Fetch.ai sees your hustle and wants to reward your magic with pizza! 💻⚡\n\n**Share YOUR greatest pizza tale!** For example:\n• Maybe it was that weird topping combo that powered an all-nighter\n• Or your most epic pizza-fueled breakthrough moment\n• Perhaps when pizza literally saved your merge conflict\n• Any perfect slice during your hackathon grind!\n\n⭐ Remember: Legendary stories earn PREMIUM pizzas, good ones get STANDARD, all stories get rewarded! Cast your best spell and unlock your pizza.reward()! 🎁",
         
-        "🚨💻 ALERT: Pizza.js has detected a hacker in need at CalHacks 12.0! 🍕\n\nFetch.ai's pizza infrastructure is online and ready to deploy fuel directly to your stack! You're pushing commits and crushing bugs - you've earned this! ⚡\n\n**Git commit YOUR pizza story now!** Some ideas:\n• How pizza.fuel() powered your hackathon workflow\n• Your most memorable pizza + code moment\n• A legendary pizza deployment story\n• Or why your dev stack requires pizza dependencies!\n\n🎯 Heads up: Better stories = bigger pizzas! Show us your A-game for premium rewards! Drop your logs and deploy that story! 🚀"
+        "🚨💻 ALERT: Pizza.js has detected a hacker in need at TamuHacks 12.0! 🍕\n\nFetch.ai's pizza infrastructure is online and ready to deploy fuel directly to your stack! You're pushing commits and crushing bugs - you've earned this! ⚡\n\n**Git commit YOUR pizza story now!** Some ideas:\n• How pizza.fuel() powered your hackathon workflow\n• Your most memorable pizza + code moment\n• A legendary pizza deployment story\n• Or why your dev stack requires pizza dependencies!\n\n🎯 Heads up: Better stories = bigger pizzas! Show us your A-game for premium rewards! Drop your logs and deploy that story! 🚀"
     ]
 
 
@@ -390,7 +390,7 @@ async def test_gemini_functions():
     print("=" * 40)
     
     # Test 1: Intent detection
-    test_message = "I want pizza at CalHacks"
+    test_message = "I want pizza at TamuHacks"
     print(f"\n📝 Test Intent: '{test_message}'")
     intent = await gemini_understand_intent(test_message)
     print(f"Result: {intent}")

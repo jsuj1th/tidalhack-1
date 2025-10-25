@@ -171,4 +171,4 @@ Overall Engagement Score:    75.0%
 ---
 
 **Status: ✅ COMPLETE**  
-**Ready for use at CalHacks or similar events!**
+**Ready for use at TamuHacks or similar events!**

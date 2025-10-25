@@ -34,7 +34,7 @@ def quick_test():
     
     # Generate a test coupon
     print("\n2. Generating Test Coupon...")
-    test_story = f"Hey {user_name}! I had the most amazing pizza during CalHacks! It was a pepperoni masterpiece that fueled my coding marathon. The cheese was perfectly melted and the crust was crispy. It gave me the energy to debug for 8 hours straight and build an incredible AI project!"
+    test_story = f"Hey {user_name}! I had the most amazing pizza during TamuHacks! It was a pepperoni masterpiece that fueled my coding marathon. The cheese was perfectly melted and the crust was crispy. It gave me the energy to debug for 8 hours straight and build an incredible AI project!"
     
     # Use AI evaluation if available
     try:

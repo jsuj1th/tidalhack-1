@@ -8,8 +8,8 @@ import os
 from datetime import datetime
 
 # Conference Settings
-CONFERENCE_ID = "CALHACKS12"  # Change for different events
-CONFERENCE_NAME = "CalHacks 12.0"
+CONFERENCE_ID = "TamuHacks12"  # Change for different events
+CONFERENCE_NAME = "TamuHacks 12.0"
 CONFERENCE_START_DATE = "2025-10-24"  # YYYY-MM-DD format
 CONFERENCE_END_DATE = "2025-10-26"   # YYYY-MM-DD format
 

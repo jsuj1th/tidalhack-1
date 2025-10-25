@@ -85,7 +85,7 @@ python agents.py
 
 **Step 2**: Agent requests a story (AI-generated prompt)
 ```
-🧙‍♂️🍕 Greetings, CalHacks 12.0 code wizard! The Pizza Genie has materialized! ✨
+🧙‍♂️🍕 Greetings, TamuHacks 12.0 code wizard! The Pizza Genie has materialized! ✨
 
 You're casting powerful algorithms and debugging spells - Fetch.ai sees your 
 hustle and wants to reward your magic with pizza! 💻⚡
@@ -112,9 +112,9 @@ personal stash - best pizza of my life!
 🎉 What an incredible story! I love how pizza literally saved your hackathon 
 project during that snowstorm - that's the kind of dedication we celebrate! 
 
-**🎫 Your Coupon Code: PIZZA-CALHACKS12-STANDARD-A7B2C3**
+**🎫 Your Coupon Code: PIZZA-TamuHacks12-STANDARD-A7B2C3**
 
-🍕 This gets you a MEDIUM pizza with classic toppings at CalHacks 12.0!
+🍕 This gets you a MEDIUM pizza with classic toppings at TamuHacks 12.0!
 📱 Show this code at the Fetch.ai food booth
 ⭐ Story Rating: 7/10 - Solid storytelling! 👍
 ```
@@ -302,7 +302,7 @@ The Pizza Agent now supports sending coupons via email with beautiful HTML templ
 ```bash
 EMAIL_ADDRESS=your_email@gmail.com
 EMAIL_PASSWORD=your_app_password_here
-EMAIL_FROM_NAME=CalHacks Pizza Agent
+EMAIL_FROM_NAME=TamuHacks Pizza Agent
 SMTP_SERVER=smtp.gmail.com
 SMTP_PORT=587
 ```

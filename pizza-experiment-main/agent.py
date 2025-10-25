@@ -57,13 +57,13 @@ USER_STATES = {
     "COUPON_ISSUED": "coupon_issued"
 }
 
-# Pizza-themed responses for CalHacks 12.0 (Hacker Mode!)
+# Pizza-themed responses for TamuHacks 12.0 (Hacker Mode!)
 INITIAL_RESPONSES = [
-    "🍕💻 Hey CalHacks 12.0 hacker! Your code is compiling, time for a pizza break! ✨\n\nYou're out here building the future, and Fetch.ai wants to fuel your late-night debugging sessions with pizza! 🎓\n\n**Tell me YOUR pizza story!** Maybe it was:\n• That legendary 3am pizza that powered your breakthrough\n• A pizza moment that saved your hackathon project\n• An epic slice during your most intense debugging session\n• Or any other pizza tale from your coding adventures!\n\n🏆 Pro tip: Epic stories unlock bigger pizzas! Everyone gets rewarded! Let's see what pizza.execute() returns! 🚀",
+    "🍕💻 Hey TamuHacks 12.0 hacker! Your code is compiling, time for a pizza break! ✨\n\nYou're out here building the future, and Fetch.ai wants to fuel your late-night debugging sessions with pizza! 🎓\n\n**Tell me YOUR pizza story!** Maybe it was:\n• That legendary 3am pizza that powered your breakthrough\n• A pizza moment that saved your hackathon project\n• An epic slice during your most intense debugging session\n• Or any other pizza tale from your coding adventures!\n\n🏆 Pro tip: Epic stories unlock bigger pizzas! Everyone gets rewarded! Let's see what pizza.execute() returns! 🚀",
     
-    "🧙‍♂️🍕 Greetings, CalHacks 12.0 code wizard! The Pizza Genie has materialized! ✨\n\nYou're casting powerful algorithms and debugging spells - Fetch.ai sees your hustle and wants to reward your magic with pizza! 💻⚡\n\n**Share YOUR greatest pizza tale!** For example:\n• Maybe it was that weird topping combo that powered an all-nighter\n• Or your most epic pizza-fueled breakthrough moment\n• Perhaps when pizza literally saved your merge conflict\n• Any perfect slice during your hackathon grind!\n\n⭐ Remember: Legendary stories earn PREMIUM pizzas, good ones get STANDARD, all stories get rewarded! Cast your best spell and unlock your pizza.reward()! 🎁",
+    "🧙‍♂️🍕 Greetings, TamuHacks 12.0 code wizard! The Pizza Genie has materialized! ✨\n\nYou're casting powerful algorithms and debugging spells - Fetch.ai sees your hustle and wants to reward your magic with pizza! 💻⚡\n\n**Share YOUR greatest pizza tale!** For example:\n• Maybe it was that weird topping combo that powered an all-nighter\n• Or your most epic pizza-fueled breakthrough moment\n• Perhaps when pizza literally saved your merge conflict\n• Any perfect slice during your hackathon grind!\n\n⭐ Remember: Legendary stories earn PREMIUM pizzas, good ones get STANDARD, all stories get rewarded! Cast your best spell and unlock your pizza.reward()! 🎁",
     
-    "🚨💻 ALERT: Pizza.js has detected a hacker in need at CalHacks 12.0! 🍕\n\nFetch.ai's pizza infrastructure is online and ready to deploy fuel directly to your stack! You're pushing commits and crushing bugs - you've earned this! ⚡\n\n**Git commit YOUR pizza story now!** Some ideas:\n• How pizza.fuel() powered your hackathon workflow\n• Your most memorable pizza + code moment\n• A legendary pizza deployment story\n• Or why your dev stack requires pizza dependencies!\n\n🎯 Heads up: Better stories = bigger pizzas! Show us your A-game for premium rewards! Drop your logs and deploy that story! 🚀"
+    "🚨💻 ALERT: Pizza.js has detected a hacker in need at TamuHacks 12.0! 🍕\n\nFetch.ai's pizza infrastructure is online and ready to deploy fuel directly to your stack! You're pushing commits and crushing bugs - you've earned this! ⚡\n\n**Git commit YOUR pizza story now!** Some ideas:\n• How pizza.fuel() powered your hackathon workflow\n• Your most memorable pizza + code moment\n• A legendary pizza deployment story\n• Or why your dev stack requires pizza dependencies!\n\n🎯 Heads up: Better stories = bigger pizzas! Show us your A-game for premium rewards! Drop your logs and deploy that story! 🚀"
 ]
 
 def create_text_chat(text: str, end_session: bool = False) -> ChatMessage:
@@ -292,7 +292,7 @@ async def process_user_message(ctx: Context, sender: str, message: str):
                         existing_coupon, 
                         "STANDARD",  # Default tier since we don't store it
                         7,  # Default rating
-                        f"Here's your CalHacks pizza coupon: {existing_coupon}"
+                        f"Here's your TamuHacks pizza coupon: {existing_coupon}"
                     )
                     
                     if email_result["success"]:
@@ -375,13 +375,13 @@ async def process_user_message(ctx: Context, sender: str, message: str):
                         intent_data = await ai_understand_user_intent(message)
                     
                     if intent_data.get("wants_coupon", False):
-                        response = "🍕 I can help you get a pizza coupon at CalHacks 12.0! Just ask me for pizza! 🚀"
+                        response = "🍕 I can help you get a pizza coupon at TamuHacks 12.0! Just ask me for pizza! 🚀"
                     else:
-                        response = "🍕 Hi there! I'm the CalHacks 12.0 Pizza Agent powered by Fetch.ai! Say 'I want pizza' to get started! 🚀"
+                        response = "🍕 Hi there! I'm the TamuHacks 12.0 Pizza Agent powered by Fetch.ai! Say 'I want pizza' to get started! 🚀"
                 except Exception as e:
-                    response = "🍕 Hi there! I'm the CalHacks 12.0 Pizza Agent powered by Fetch.ai! Say 'I want pizza' to get started! 🚀"
+                    response = "🍕 Hi there! I'm the TamuHacks 12.0 Pizza Agent powered by Fetch.ai! Say 'I want pizza' to get started! 🚀"
             else:
-                response = "🍕 Hi there! I'm the CalHacks 12.0 Pizza Agent powered by Fetch.ai! Say 'I want pizza' to get started! 🚀"
+                response = "🍕 Hi there! I'm the TamuHacks 12.0 Pizza Agent powered by Fetch.ai! Say 'I want pizza' to get started! 🚀"
             
             await ctx.send(sender, create_text_chat(response))
     

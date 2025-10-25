@@ -740,7 +740,7 @@ HTML_TEMPLATE = """
     <div class="container">
         <h3>🍕 How It Works</h3>
         <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #4CAF50;">
-            <p><strong>🎯 Share your pizza story → Get AI rating → Receive coupon → Redeem at CalHacks!</strong></p>
+            <p><strong>🎯 Share your pizza story → Get AI rating → Receive coupon → Redeem at TamuHacks!</strong></p>
             <ul style="margin: 10px 0;">
                 <li><strong>Better stories = Better coupons!</strong> (Premium/Standard/Basic tiers)</li>
                 <li><strong>Show your coupon code</strong> to any food vendor at the conference</li>
@@ -754,8 +754,13 @@ HTML_TEMPLATE = """
         <p>Enter your pizza story below and test how the AI evaluates it:</p>
         <textarea id="story" placeholder="Enter your pizza story here...">I had the most amazing pizza during my last hackathon! I was coding until 3am and getting really tired. Then my teammate ordered this incredible pepperoni pizza with extra cheese. The moment I took a bite, I got a burst of energy and solved the bug I'd been working on for hours! That pizza literally saved our project and we ended up winning second place. Best pizza ever! 🍕</textarea>
         <br>
+        <div style="margin: 15px 0;">
+            <label for="userEmail" style="display: block; margin-bottom: 5px; font-weight: bold;">📧 Email (optional - to receive coupon via email):</label>
+            <input type="email" id="userEmail" placeholder="your.email@example.com" style="width: 100%; padding: 10px; border-radius: 6px; border: 2px solid #ddd; font-size: 14px;">
+        </div>
         <button onclick="evaluateStory()">📊 Evaluate Story</button>
         <button class="secondary" onclick="generateCoupon()">🎫 Generate Full Coupon Response</button>
+        <button class="secondary" onclick="generateCouponWithEmail()">📧 Generate & Email Coupon</button>
         <div id="storyResult"></div>
     </div>
     
@@ -906,7 +911,7 @@ HTML_TEMPLATE = """
                         <div class="instructions" style="background: #e8f4fd; padding: 20px; border-radius: 10px; margin: 20px 0; border-left: 4px solid #2196F3;">
                             <h5 style="margin-top: 0; color: #2196F3;"><span style="font-size: 1.2em;">📱</span> How to Redeem Your Coupon</h5>
                             <ol style="margin: 10px 0; padding-left: 25px;">
-                                <li>Find any participating food vendor at CalHacks 12.0</li>
+                                <li>Find any participating food vendor at TamuHacks 12.0</li>
                                 <li>Show them this coupon code: <strong style="color: #e74c3c;">${result.coupon_code}</strong></li>
                                 <li>Enjoy your delicious ${result.tier.toLowerCase()} pizza! <span style="font-size: 1.2em;">🍕</span></li>
                             </ol>
@@ -924,7 +929,7 @@ HTML_TEMPLATE = """
                             <p>Want to receive this coupon via email? Enter your email address:</p>
                             <input type="email" class="email-input" id="emailInput-${Date.now()}" placeholder="your.email@example.com" value="{{ default_email }}">
                             <div class="email-buttons">
-                                <button class="secondary" onclick="sendCouponEmail('${result.coupon_code}', '${result.tier}', ${result.rating}, \`${result.response.replace(/`/g, '\\\\`')}\`, this)">
+                                <button class="secondary" onclick="sendCouponEmail('${result.coupon_code}', '${result.tier}', ${result.rating}, '${result.response.replace(/'/g, \"\\\\'\").replace(/`/g, \"\\\\`\")}', this)">
                                     📧 Send via Email
                                 </button>
                             </div>
@@ -936,6 +941,90 @@ HTML_TEMPLATE = """
                             ${renderMarkdown(result.response)}
                         </div>
                     </div>`;
+            } finally {
+                button.textContent = originalText;
+                button.disabled = false;
+            }
+        }
+        
+        async function generateCouponWithEmail() {
+            const button = event.target;
+            const originalText = button.textContent;
+            button.innerHTML = '<span class="loading"></span> Generating & Sending...';
+            button.disabled = true;
+            
+            try {
+                const story = document.getElementById('story').value;
+                const email = document.getElementById('userEmail').value.trim();
+                
+                if (!email) {
+                    showToast('Please enter an email address to send the coupon', 'error');
+                    return;
+                }
+                
+                const response = await fetch('/generate_coupon_with_email', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({story: story, email: email})
+                });
+                const result = await response.json();
+                
+                if (result.email_sent) {
+                    document.getElementById('storyResult').innerHTML = 
+                        `<div class="response">
+                            <h4>🎫 Coupon Generated & Emailed! 📧</h4>
+                            
+                            <div class="coupon-code">
+                                ${result.coupon_code}
+                                <button class="copy-button" onclick="copyToClipboard('${result.coupon_code}', this)">
+                                    📋 Copy Code
+                                </button>
+                            </div>
+                            
+                            <p><strong>Tier:</strong> ${formatTier(result.tier)}</p>
+                            <p><strong>Rating:</strong> ${formatRating(result.rating)}</p>
+                            
+                            <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #4CAF50;">
+                                <h5>📧 Email Status</h5>
+                                <p><strong>✅ Successfully sent to:</strong> ${email}</p>
+                                <p><strong>Message:</strong> ${result.email_message}</p>
+                            </div>
+                            
+                            <h5>🤖 Agent Response:</h5>
+                            <div class="markdown-content" style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #4CAF50;">
+                                ${renderMarkdown(result.response)}
+                            </div>
+                        </div>`;
+                    showToast('Coupon sent to your email successfully!', 'success');
+                } else {
+                    document.getElementById('storyResult').innerHTML = 
+                        `<div class="response">
+                            <h4>🎫 Coupon Generated (Email Failed) ⚠️</h4>
+                            
+                            <div class="coupon-code">
+                                ${result.coupon_code}
+                                <button class="copy-button" onclick="copyToClipboard('${result.coupon_code}', this)">
+                                    📋 Copy Code
+                                </button>
+                            </div>
+                            
+                            <p><strong>Tier:</strong> ${formatTier(result.tier)}</p>
+                            <p><strong>Rating:</strong> ${formatRating(result.rating)}</p>
+                            
+                            <div style="background: #ffe8e8; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #f44336;">
+                                <h5>📧 Email Status</h5>
+                                <p><strong>❌ Failed to send to:</strong> ${email}</p>
+                                <p><strong>Error:</strong> ${result.email_message}</p>
+                                <p><em>Don't worry! Your coupon code above still works.</em></p>
+                            </div>
+                            
+                            <h5>🤖 Agent Response:</h5>
+                            <div class="markdown-content" style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #4CAF50;">
+                                ${renderMarkdown(result.response)}
+                            </div>
+                        </div>`;
+                    showToast('Coupon generated but email failed to send', 'error');
+                }
             } finally {
                 button.textContent = originalText;
                 button.disabled = false;
@@ -1204,9 +1293,9 @@ def generate_prompt():
             # Fallback prompt
             import random
             fallback_prompts = [
-                "🍕💻 Hey CalHacks 12.0 hacker! Your code is compiling, time for a pizza break! ✨\n\nTell me YOUR pizza story!",
-                "🧙‍♂️🍕 Greetings, CalHacks 12.0 code wizard! The Pizza Genie has materialized! ✨\n\nShare YOUR greatest pizza tale!",
-                "🚨💻 ALERT: Pizza.js has detected a hacker in need at CalHacks 12.0! 🍕\n\nGit commit YOUR pizza story now!"
+                "🍕💻 Hey TamuHacks 12.0 hacker! Your code is compiling, time for a pizza break! ✨\n\nTell me YOUR pizza story!",
+                "🧙‍♂️🍕 Greetings, TamuHacks 12.0 code wizard! The Pizza Genie has materialized! ✨\n\nShare YOUR greatest pizza tale!",
+                "🚨💻 ALERT: Pizza.js has detected a hacker in need at TamuHacks 12.0! 🍕\n\nGit commit YOUR pizza story now!"
             ]
             prompt = random.choice(fallback_prompts)
             method = "Static fallback"
@@ -1249,6 +1338,70 @@ def check_email_config():
     """Check if email is configured"""
     result = test_email_configuration()
     return jsonify(result)
+
+@app.route('/generate_coupon_with_email', methods=['POST'])
+def generate_coupon_with_email():
+    """Generate a complete coupon response and send via email"""
+    data = request.json
+    story = data.get('story', '')
+    email = data.get('email', '').strip()
+    
+    if not email:
+        return jsonify({
+            'error': 'Email address is required',
+            'email_sent': False
+        })
+    
+    try:
+        # Evaluate story
+        if USE_AI_EVALUATION and USE_GEMINI:
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            rating, explanation = loop.run_until_complete(gemini_evaluate_story(story))
+        else:
+            rating = evaluate_story_quality(story)
+            explanation = "Rule-based evaluation"
+        
+        # Generate coupon
+        coupon_code, tier = generate_coupon_code("web_user", rating, True)
+        
+        # Generate response
+        if USE_AI_RESPONSES and USE_GEMINI:
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            response = loop.run_until_complete(
+                gemini_generate_response_message(story, rating, tier, coupon_code)
+            )
+        else:
+            # Fallback response
+            if rating >= 8:
+                response = f"🎉 Amazing story! Your coupon: **{coupon_code}** - Gets you a LARGE premium pizza! 🏆"
+            elif rating >= 6:
+                response = f"😊 Great story! Your coupon: **{coupon_code}** - Gets you a MEDIUM pizza! 👍"
+            else:
+                response = f"🍕 Thanks for sharing! Your coupon: **{coupon_code}** - Gets you a tasty pizza! 🙂"
+        
+        # Send email
+        email_result = send_coupon_email(email, coupon_code, tier, rating, response)
+        
+        return jsonify({
+            'coupon_code': coupon_code,
+            'tier': tier,
+            'rating': rating,
+            'response': response,
+            'email_sent': email_result['success'],
+            'email_message': email_result['message']
+        })
+        
+    except Exception as e:
+        return jsonify({
+            'coupon_code': 'ERROR-CODE',
+            'tier': 'BASIC',
+            'rating': 5,
+            'response': f"Error generating coupon: {str(e)}",
+            'email_sent': False,
+            'email_message': f"Error: {str(e)}"
+        })
 
 @app.route('/admin')
 def admin_dashboard():
@@ -1333,7 +1486,7 @@ def test_workflow():
 
 if __name__ == '__main__':
     print("🍕 Starting Pizza Agent Web Test Interface")
-    print("📱 Open your browser to: http://127.0.0.1:5005")
+    print("📱 Open your browser to: http://127.0.0.1:5001")
     print("🔧 This interface tests the pizza agent functionality directly")
     print()
-    app.run(debug=True, host='127.0.0.1', port=5005)
+    app.run(debug=True, host='127.0.0.1', port=5001)

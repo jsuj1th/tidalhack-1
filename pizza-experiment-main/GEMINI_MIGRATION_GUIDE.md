@@ -66,7 +66,7 @@ python agent.py
 
 ### ✅ Dynamic Prompt Generation
 - Gemini creates unique, engaging prompts
-- Maintains CalHacks 12.0 theme
+- Maintains TamuHacks 12.0 theme
 - Fallback to static prompts
 
 ### ✅ Personalized Responses

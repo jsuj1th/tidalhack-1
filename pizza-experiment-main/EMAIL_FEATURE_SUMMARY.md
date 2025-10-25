@@ -114,7 +114,7 @@ smtplib        # Built-in SMTP client (Python standard library)
 ```bash
 EMAIL_ADDRESS=your_email@gmail.com      # Sender email
 EMAIL_PASSWORD=your_app_password        # App password (not regular password)
-EMAIL_FROM_NAME=CalHacks Pizza Agent    # Display name
+EMAIL_FROM_NAME=TamuHacks Pizza Agent    # Display name
 SMTP_SERVER=smtp.gmail.com              # SMTP server
 SMTP_PORT=587                           # SMTP port (TLS)
 ```
@@ -134,7 +134,7 @@ pizza-experiment-main/
 ## 🎨 Email Template Features
 
 ### **Visual Design**
-- **CalHacks Branding** with gradient headers
+- **TamuHacks Branding** with gradient headers
 - **Coupon Code Highlight** with dashed border
 - **Tier Badges** with color coding (Premium/Standard/Basic)
 - **Rating Display** with star emoji and gradient

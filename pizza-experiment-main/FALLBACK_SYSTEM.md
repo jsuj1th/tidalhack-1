@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Pizza Agent uses a **multi-layer fallback system** to ensure 100% uptime even when OpenAI API is overloaded, slow, or unavailable. This is critical for high-traffic events like CalHacks 12.0.
+The Pizza Agent uses a **multi-layer fallback system** to ensure 100% uptime even when OpenAI API is overloaded, slow, or unavailable. This is critical for high-traffic events like TamuHacks 12.0.
 
 ## 🏗️ Architecture
 
@@ -73,7 +73,7 @@ OPENAI_RETRY_COUNT=2
 - `OPENAI_TIMEOUT=10.0` (more generous)
 - `OPENAI_RETRY_COUNT=3` (more retries)
 
-**For High Traffic (CalHacks):**
+**For High Traffic (TamuHacks):**
 - `OPENAI_TIMEOUT=5.0` (fail fast)
 - `OPENAI_RETRY_COUNT=2` (quick fallback)
 
@@ -160,7 +160,7 @@ intent = await openai_understand_intent("I want pizza")
 prompt = await openai_generate_unique_prompt()
 
 # If fails, uses high-quality static prompts
-# (still engaging and CalHacks-themed!)
+# (still engaging and TamuHacks-themed!)
 ```
 
 ### 3. Response Generation
@@ -214,7 +214,7 @@ openai_failures = 5  # Exceeds threshold
 
 ## 🎯 Production Checklist
 
-✅ **Before CalHacks 12.0:**
+✅ **Before TamuHacks 12.0:**
 
 1. [ ] Set reasonable timeout (5-8 seconds)
 2. [ ] Configure retry count (2 retries)
@@ -244,7 +244,7 @@ openai_failures = 5  # Exceeds threshold
 
 ## 📞 Emergency Response
 
-If OpenAI goes down during CalHacks:
+If OpenAI goes down during TamuHacks:
 
 1. **Agent continues working** (static responses)
 2. **Monitor logs** for failure patterns
