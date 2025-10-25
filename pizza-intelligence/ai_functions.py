@@ -207,7 +207,7 @@ async def ai_understand_user_intent(message: str) -> Dict[str, any]:
         }
     
     prompt = f"""
-    Analyze this message to understand what the user wants from a pizza coupon agent.
+    Analyze this message to understand what the user wants from a pizza intelligence system.
     
     Message: "{message}"
     

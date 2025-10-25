@@ -1,6 +1,6 @@
 # utils.py
 """
-Utility functions for the Pizza Coupon Agent
+Utility functions for the Pizza Intelligence
 Includes testing, monitoring, and vendor tools
 """
 

@@ -2,7 +2,7 @@
 
 ## ✅ Migration Completed Successfully!
 
-The pizza-experiment-main project has been successfully migrated from OpenAI API to Google's Gemini API.
+The pizza-intelligence project has been successfully migrated from OpenAI API to Google's Gemini API.
 
 ### 🔍 Current Status
 

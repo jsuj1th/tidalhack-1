@@ -121,7 +121,7 @@ SMTP_PORT=587                           # SMTP port (TLS)
 
 ### **File Structure**
 ```
-pizza-experiment-main/
+pizza-intelligence/
 ├── email_utils.py              # Core email functionality
 ├── web_test_interface.py       # Enhanced web interface
 ├── agent.py                    # Updated agent with email support

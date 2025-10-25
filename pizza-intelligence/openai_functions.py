@@ -103,7 +103,7 @@ async def openai_understand_intent(message: str, retry_count: int = None) -> Dic
                 openai_client.chat.completions.create(
                     model="gpt-4o-mini",
                     messages=[
-                        {"role": "system", "content": "You are an intent classifier for a pizza coupon agent at TamuHacks 12.0. Respond only with valid JSON."},
+                        {"role": "system", "content": "You are an intent classifier for a pizza intelligence system at TamuHacks 12.0. Respond only with valid JSON."},
                         {"role": "user", "content": prompt}
                     ],
                     temperature=0.3,

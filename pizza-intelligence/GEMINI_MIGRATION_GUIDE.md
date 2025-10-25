@@ -22,7 +22,7 @@ This guide explains how to migrate the Pizza Experiment from OpenAI API to Googl
 
 ### 1. Install Dependencies
 ```bash
-cd pizza-experiment-main
+cd pizza-intelligence
 pip install -r requirements.txt
 ```
 

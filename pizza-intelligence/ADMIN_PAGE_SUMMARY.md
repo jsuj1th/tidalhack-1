@@ -123,7 +123,7 @@ All tests pass successfully:
 
 ### **Start the Server:**
 ```bash
-cd pizza-experiment-main
+cd pizza-intelligence
 python web_test_interface.py
 ```
 

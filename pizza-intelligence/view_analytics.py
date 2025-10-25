@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Analytics Viewer for Pizza Coupon Agent
+Analytics Viewer for Pizza Intelligence
 Run this to see collected analytics data
 """
 

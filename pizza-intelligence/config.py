@@ -1,6 +1,6 @@
 # config.py
 """
-Configuration file for Pizza Coupon Agent
+Configuration file for Pizza Intelligence
 Modify these settings for different conferences or deployments
 """
 
@@ -16,7 +16,7 @@ CONFERENCE_END_DATE = "2025-10-26"   # YYYY-MM-DD format
 # Agent Settings
 AGENT_NAME = "fetch-pizza"
 AGENT_SEED = "pizza_coupon_agent_seed_2024_v2"  # Change to reset agent identity
-AGENT_DESCRIPTION = "Get your free pizza coupon by sharing a pizza story!"
+AGENT_DESCRIPTION = "Intelligent pizza distribution system - get your free pizza coupon by sharing a pizza story!"
 
 # AI Agent Configuration (for story evaluation)
 AI_AGENT_ADDRESS = "agent1qtlpfshtlcxekgrfcpmv7m9zpajuwu7d5jfyachvpa4u3dkt6k0uwwp2lct"
